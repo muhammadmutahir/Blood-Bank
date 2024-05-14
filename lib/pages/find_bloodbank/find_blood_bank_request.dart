@@ -1,4 +1,3 @@
-
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/pages/find_bloodbank/available_blood_bank.dart';
 import 'package:blood_bank/widgets/select_blood_type_button.dart';
@@ -35,22 +34,32 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
     false,
   ];
 
-  final List<String> gendertype = [
-    'Male',
-    'Female',
-  ];
-  List<bool> gendertypeselected = [
-    false,
-    false,
-  ];
+  // final List<String> gendertype = [
+  //   'Male',
+  //   'Female',
+  // ];
+  // List<bool> gendertypeselected = [
+  //   false,
+  //   false,
+  // ];
 
-  final List<String> city = ['--Select City--', 'Lahore', 'Shorkot', 'Multan'];
-  bool isCitySelected = false;
+  // final List<String> city = ['--Select City--', 'Lahore', 'Shorkot', 'Multan'];
+  // bool isCitySelected = false;
 
-  String selectedCity = '';
+  // String selectedCity = '';
+
   String selectedbloodType = '';
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String selectedCity = "--Select City--";
+  List<String> cities = [
+    "Karachi",
+    "Lahore",
+    "Islamabad",
+    "Rawalpindi",
+    "Faisalabad",
+    "Multan",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -194,29 +203,93 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
           SizedBox(
             height: 15,
           ),
-          Container(
-            margin: EdgeInsets.only(left: 45),
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: DropdownButton<String>(
-              underline: Container(),
-              value: city.first,
-              onChanged: (String? value) => _dropDownButtonOnTap(value),
-              items: city.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 45),
-                    child: Text(value),
+          // Container(
+          //   margin: EdgeInsets.only(left: 45),
+          //   padding: const EdgeInsets.all(5),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(width: 1),
+          //     borderRadius: BorderRadius.circular(10),
+          //   ),
+          //   child: DropdownButton<String>(
+          //     underline: Container(),
+          //     value: city.first,
+          //     onChanged: (String? value) => _dropDownButtonOnTap(value),
+          //     items: city.map<DropdownMenuItem<String>>((String value) {
+          //       return DropdownMenuItem<String>(
+          //         value: value,
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(left: 45),
+          //           child: Text(value),
+          //         ),
+          //       );
+          //     }).toList(),
+          //   ),
+          // ),
+          // Visibility(visible: isCitySelected, child: Text(selectedCity)),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            child: Container(
+              width: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black, width: 1),
+                color: selectedCity == "--Select City--"
+                    ? Colors.white
+                    : Colors.red,
+              ),
+              child: Center(
+                child: DropdownButtonFormField<String>(
+                  value: selectedCity,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCity = newValue!;
+                      print("Selected city: $selectedCity");
+                    });
+                  },
+                  items: [
+                    DropdownMenuItem<String>(
+                      value: "--Select City--",
+                      child: Center(
+                        // Centering the text
+                        child: Text(
+                          "--Select City--",
+                          style: TextStyle(
+                            color: selectedCity == "--Select City--"
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    ...cities.map<DropdownMenuItem<String>>(
+                      (String value) {
+                        return DropdownMenuItem<String>(
+                          value: value.toLowerCase(),
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              color: selectedCity == value.toLowerCase()
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
+                  ],
+                  icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                    fillColor: Colors.transparent,
+                    filled: true,
                   ),
-                );
-              }).toList(),
+                ),
+              ),
             ),
           ),
-          Visibility(visible: isCitySelected, child: Text(selectedCity)),
+
           SizedBox(
             height: 60,
           ),
@@ -246,13 +319,13 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
     setState(() {});
   }
 
-  void _dropDownButtonOnTap(String? value) {
-    setState(() {
-      selectedCity = value!;
-      isCitySelected = true;
-    });
-    print(selectedCity);
-  }
+//   void _dropDownButtonOnTap(String? value) {
+//     setState(() {
+//       selectedCity = value!;
+//       isCitySelected = true;
+//     });
+//     print(selectedCity);
+//   }
 }
 
 Widget button(String text, VoidCallback onPressed) {

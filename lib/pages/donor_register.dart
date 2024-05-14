@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/models/donor_user_model.dart';
 import 'package:blood_bank/home_page/home_page.dart';
+import 'package:blood_bank/models/user_model.dart';
 import 'package:blood_bank/utils/utils.dart';
 import 'package:blood_bank/widgets/whiteroundbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +25,9 @@ class DonorRegister extends StatefulWidget {
 class _DonorRegisterState extends State<DonorRegister> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
+
   String selectedCity = "--Select City--";
+  String selectedblood = "--Select Blood Type--";
 
   TextEditingController fullnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -44,6 +47,17 @@ class _DonorRegisterState extends State<DonorRegister> {
     "Rawalpindi",
     "Faisalabad",
     "Multan",
+  ];
+
+  List<String> bloodtypes = [
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'AB+',
+    'AB-',
+    'O+',
+    'O-',
   ];
 
   @override
@@ -262,56 +276,37 @@ class _DonorRegisterState extends State<DonorRegister> {
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
                         child: TextFormField(
-                          controller: bloodgroupController,
-                          keyboardType: TextInputType.text,
-                          style: const TextStyle(color: Color(0xffE5E3E3)),
-                          decoration: const InputDecoration(
-                              labelText: 'Blood Group',
-                              labelStyle:
-                                  TextStyle(color: whiteColor, fontSize: 18),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.yellow),
-                              )),
-                          validator: validatebloodgroup,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: TextFormField(
                           controller: contactnoController,
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Color(0xffE5E3E3)),
                           decoration: const InputDecoration(
-                              labelText: 'Contact No',
-                              //prefixText: '+92',
-                              prefixStyle: TextStyle(color: whiteColor),
-                              //hintText: '+923000000000',
-
-                              labelStyle:
-                                  TextStyle(color: whiteColor, fontSize: 18),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.yellow),
-                              )),
+                            labelText: 'Contact No',
+                            labelStyle:
+                                TextStyle(color: whiteColor, fontSize: 18),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: whiteColor),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: whiteColor),
+                            ),
+                            errorStyle: TextStyle(color: Colors.yellow),
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.yellow),
+                            ),
+                          ),
+                          onTap: () {
+                            if (contactnoController.text.isEmpty) {
+                              contactnoController.text = '+92';
+                              contactnoController.selection =
+                                  TextSelection.fromPosition(TextPosition(
+                                      offset: contactnoController.text.length));
+                            }
+                          },
                           onChanged: (value) {
-                            // Check if the entered phone number starts with "+92"
                             if (!value.startsWith('+92')) {
-                              // If not, add "+92" to the beginning of the phone number
                               contactnoController.value = TextEditingValue(
                                 text: '+92$value',
+                                selection: TextSelection.collapsed(offset: 4),
                               );
                             }
                           },
@@ -355,6 +350,73 @@ class _DonorRegisterState extends State<DonorRegister> {
                                 borderSide: BorderSide(color: Colors.yellow),
                               )),
                           validator: validatePassword,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, right: 210, bottom: 10),
+                        child: Text(
+                          'Select Blood Type:',
+                          style: TextStyle(color: whiteColor),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: Container(
+                          width: 210,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: Center(
+                            child: DropdownButtonFormField<String>(
+                              value: selectedblood,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedblood = newValue!;
+                                  print("Selected blood: $selectedblood");
+                                });
+                              },
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: "--Select Blood Type--",
+                                  child: Center(
+                                    child: Text(
+                                      "--Select Blood Type--",
+                                      style: TextStyle(
+                                        color: Color(0xffFF0E0E),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ...bloodtypes.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(
+                                          color: Color(0xffFF0E0E),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ).toList(),
+                              ],
+                              icon: Icon(Icons.arrow_drop_down,
+                                  color: Color(0xffFF0E0E)),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -454,7 +516,7 @@ class _DonorRegisterState extends State<DonorRegister> {
                                       username: usernameController.text,
                                       age: int.parse(ageController.text),
                                       city: selectedCity,
-                                      bloodgroup: bloodgroupController.text,
+                                      bloodgroup: selectedblood,
                                       contactno: contactnoController.text,
                                       password: passwordController.text,
                                       id: value.user!.uid,
@@ -499,6 +561,16 @@ class _DonorRegisterState extends State<DonorRegister> {
 
   Future createUser(
       {required DonorUserModel user, required String userId}) async {
+    UserModel userModel = UserModel(
+      id: user.id,
+      name: user.fullname,
+      email: user.email,
+      userType: "donor",
+    );
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .set(userModel.toJson());
     FirebaseFirestore.instance
         .collection('donordetails')
         .doc(userId)

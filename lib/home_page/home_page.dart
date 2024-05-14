@@ -1,16 +1,33 @@
+import 'dart:typed_data';
+
 import 'package:blood_bank/components/constants.dart';
+import 'package:blood_bank/home_page/update_profile_seeker.dart';
+import 'package:blood_bank/models/blood_bank_user_model.dart';
+import 'package:blood_bank/models/donor_user_model.dart';
+import 'package:blood_bank/models/seeker_user_model.dart';
 import 'package:blood_bank/pages/donate_blood/donate_blood_req.dart';
 import 'package:blood_bank/pages/find_bloodbank/find_blood_bank_request.dart';
 import 'package:blood_bank/pages/find_donor/find_donor_request.dart';
 import 'package:blood_bank/pages/login.dart';
 import 'package:blood_bank/utils/utils.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = "HomePage";
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    // required this.seekerUserModel,
+    // required this.donorUserModel,
+    // required this.bloodBankUserModel,
+  });
+
+  // final SeekerUserModel? seekerUserModel;
+  // final DonorUserModel? donorUserModel;
+  // final BloodBankUserModel? bloodBankUserModel;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,6 +35,26 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  //DonorUserModel? donorUserModel;
+
+  String name = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getCurrentUser();
+  }
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   getCurrentUser();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +74,11 @@ class _HomePageState extends State<HomePage> {
                       bottomRight: Radius.circular(60),
                     ),
                   ),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.all(100),
                     child: Text(
-                      '___show name___',
-                      style: TextStyle(color: whiteColor, fontSize: 20),
+                      "WELCOME $name".toUpperCase(),
+                      style: TextStyle(color: whiteColor, fontSize: 15),
                     ),
                   ),
                 ),
@@ -91,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   left: 20,
                   child: Builder(
                     builder: (context) => IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.menu,
                         color: Colors.white,
                       ),
@@ -107,8 +144,10 @@ class _HomePageState extends State<HomePage> {
               height: 40,
             ),
             button('Find Donor', () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => FindDonorRequest()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const FindDonorRequest()));
             }),
             const SizedBox(
               height: 15,
@@ -117,14 +156,16 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => FindBloodBankRequest()));
+                      builder: (context) => const FindBloodBankRequest()));
             }),
             const SizedBox(
               height: 15,
             ),
             button('Donate Blood', () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DonateBloodReq()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DonateBloodReq()));
             }),
           ],
         ),
@@ -137,73 +178,100 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 200,
+                  height: 260,
                   width: double.infinity,
-                  color: Color(0xffFF7676),
-                  // Red container
+                  color: const Color(0xffFF7676),
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 180, top: 120),
-                    child: Center(
-                      child: Text(
-                        'Menu',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                    padding: const EdgeInsets.only(
+                        right: 0, left: 60, top: 55, bottom: 20),
+                    child: Stack(
+                      children: [
+                        image != null
+                            ? CircleAvatar(
+                                radius: 64,
+                                backgroundImage: MemoryImage(image!),
+                              )
+                            : const CircleAvatar(
+                                radius: 64,
+                                backgroundImage: NetworkImage(
+                                    'https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
+                              ),
+                        Positioned(
+                          top: 150,
+                          left: 40,
+                          child: Text(
+                            name.toUpperCase(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          top: 90,
+                          left: 80,
+                          child: IconButton(
+                            onPressed: selectImage,
+                            icon: const Icon(Icons.add_a_photo),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.settings,
                     color: Colors.red,
                   ),
-                  title: Text('Update Profile'),
-                  onTap: () {},
+                  title: const Text('Update Profile'),
+                  onTap: () {
+                    // Navigator.push(context,
+                    // MaterialPageRoute(builder: (context)=> updateProfileSeeker()));
+                  },
                 ),
-                Divider(
+                const Divider(
                   color: Colors.grey,
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.settings,
                     color: Colors.red,
                   ),
-                  title: Text('Settings'),
+                  title: const Text('Settings'),
                   onTap: () {},
                 ),
-                Divider(
+                const Divider(
                   color: Colors.grey,
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.history,
                     color: Colors.red,
                   ),
-                  title: Text('History'),
+                  title: const Text('History'),
                   onTap: () {},
                 ),
-                Divider(
+                const Divider(
                   color: Colors.grey,
                 ),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.local_hospital,
                     color: Colors.red,
                   ),
-                  title: Text('Donation'),
+                  title: const Text('Donation'),
                   onTap: () {},
                 ),
-                Divider(
+                const Divider(
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 200, left: 20),
+                  padding: const EdgeInsets.only(top: 170, left: 20),
                   child: Container(
                     width: 250,
                     height: 50,
@@ -214,13 +282,15 @@ class _HomePageState extends State<HomePage> {
                     child: TextButton(
                       onPressed: () {
                         _auth.signOut().then((value) {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Login()));
                         }).onError((error, stackTrace) {
                           utils().toastMessage(error.toString());
                         });
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -273,4 +343,36 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  Uint8List? image;
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      image = img;
+    });
+  }
+
+  Future<void> _getCurrentUser() async {
+    User? user = _auth.currentUser;
+    // uid = user!.uid;
+    if (user != null) {
+      DocumentSnapshot userdata =
+          await _firebaseFirestore.collection("users").doc(user.uid).get();
+      setState(() {
+        name = userdata['name'];
+      });
+    }
+  }
+
+  // Future<void> getCurrentUser() async {
+  //   User? user = _auth.currentUser;
+
+  //   if (widget.seekerUserModel != null) {
+  //     name = widget.seekerUserModel!.fullname;
+  //   } else if (widget.donorUserModel != null) {
+  //     name = widget.donorUserModel!.fullname;
+  //   } else {
+  //     name = widget.bloodBankUserModel!.bloodbankname;
+  //   }
+  // }
 }

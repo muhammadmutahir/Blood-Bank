@@ -1,7 +1,9 @@
 import 'package:blood_bank/home_page/home_page.dart';
+import 'package:blood_bank/home_page/update_profile_seeker.dart';
 import 'package:blood_bank/pages/blood_bank_register.dart';
-import 'package:blood_bank/pages/find_bloodbank/find_blood_bank_request.dart';
-import 'package:blood_bank/pages/messages/chat_screen.dart';
+import 'package:blood_bank/pages/donor_register.dart';
+import 'package:blood_bank/pages/find_donor/available_donor.dart';
+import 'package:blood_bank/pages/login.dart';
 import 'package:blood_bank/pages/seeker_register.dart';
 import 'package:blood_bank/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';

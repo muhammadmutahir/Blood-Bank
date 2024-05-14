@@ -178,8 +178,10 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.only(left: 140),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: (context)=> ForgotPasswordScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPasswordScreen()));
                     },
                     child: const Center(
                       child: Text(

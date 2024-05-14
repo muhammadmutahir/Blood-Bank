@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/home_page.dart';
 import 'package:blood_bank/models/blood_bank_user_model.dart';
+import 'package:blood_bank/models/user_model.dart';
 import 'package:blood_bank/utils/utils.dart';
 import 'package:blood_bank/widgets/whiteroundbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   String selectedCity = "--Select City--";
+  String selectedblood = "--Select Blood Type--";
 
   TextEditingController bloodbanknameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -37,6 +39,17 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
     "Rawalpindi",
     "Faisalabad",
     "Multan",
+  ];
+
+  List<String> bloodtypes = [
+    'A+',
+    'A-',
+    'B+',
+    'B-',
+    'AB+',
+    'AB-',
+    'O+',
+    'O-',
   ];
 
   @override
@@ -200,29 +213,29 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                           validator: validateEmail,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: TextFormField(
-                          controller: bloodgroupController,
-                          keyboardType: TextInputType.text,
-                          style: const TextStyle(color: Color(0xffE5E3E3)),
-                          decoration: const InputDecoration(
-                              labelText: 'Blood Group',
-                              labelStyle:
-                                  TextStyle(color: whiteColor, fontSize: 18),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.yellow),
-                              )),
-                          validator: validatebloodgroup,
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 25, right: 25),
+                      //   child: TextFormField(
+                      //     controller: bloodgroupController,
+                      //     keyboardType: TextInputType.text,
+                      //     style: const TextStyle(color: Color(0xffE5E3E3)),
+                      //     decoration: const InputDecoration(
+                      //         labelText: 'Blood Group',
+                      //         labelStyle:
+                      //             TextStyle(color: whiteColor, fontSize: 18),
+                      //         enabledBorder: UnderlineInputBorder(
+                      //           borderSide: BorderSide(color: whiteColor),
+                      //         ),
+                      //         focusedBorder: UnderlineInputBorder(
+                      //           borderSide: BorderSide(color: whiteColor),
+                      //         ),
+                      //         errorStyle: TextStyle(color: Colors.yellow),
+                      //         errorBorder: UnderlineInputBorder(
+                      //           borderSide: BorderSide(color: Colors.yellow),
+                      //         )),
+                      //     validator: validatebloodgroup,
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
                         child: TextFormField(
@@ -253,22 +266,40 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Color(0xffE5E3E3)),
                           decoration: const InputDecoration(
-                              labelText: 'Contact No',
-                              labelStyle:
-                                  TextStyle(color: whiteColor, fontSize: 18),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.yellow),
-                              )),
+                            labelText: 'Contact No',
+                            labelStyle:
+                                TextStyle(color: whiteColor, fontSize: 18),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: whiteColor),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: whiteColor),
+                            ),
+                            errorStyle: TextStyle(color: Colors.yellow),
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.yellow),
+                            ),
+                          ),
+                          onTap: () {
+                            if (contactnoController.text.isEmpty) {
+                              contactnoController.text = '+92';
+                              contactnoController.selection =
+                                  TextSelection.fromPosition(TextPosition(
+                                      offset: contactnoController.text.length));
+                            }
+                          },
+                          onChanged: (value) {
+                            if (!value.startsWith('+92')) {
+                              contactnoController.value = TextEditingValue(
+                                text: '+92$value',
+                                selection: TextSelection.collapsed(offset: 4),
+                              );
+                            }
+                          },
                           validator: validatecontactno,
                         ),
                       ),
+
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
                         child: TextFormField(
@@ -315,6 +346,73 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                         padding: const EdgeInsets.only(
                             top: 10, right: 210, bottom: 10),
                         child: Text(
+                          'Select Blood Type:',
+                          style: TextStyle(color: whiteColor),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 25),
+                        child: Container(
+                          width: 210,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.white, width: 1),
+                          ),
+                          child: Center(
+                            child: DropdownButtonFormField<String>(
+                              value: selectedblood,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedblood = newValue!;
+                                  print("Selected blood: $selectedblood");
+                                });
+                              },
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: "--Select Blood Type--",
+                                  child: Center(
+                                    child: Text(
+                                      "--Select Blood Type--",
+                                      style: TextStyle(
+                                        color: Color(0xffFF0E0E),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ...bloodtypes.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(
+                                          color: Color(0xffFF0E0E),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ).toList(),
+                              ],
+                              icon: Icon(Icons.arrow_drop_down,
+                                  color: Color(0xffFF0E0E)),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                fillColor: Colors.white,
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, right: 210, bottom: 10),
+                        child: Text(
                           'Select City:',
                           style: TextStyle(color: whiteColor),
                         ),
@@ -342,10 +440,12 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                                 DropdownMenuItem<String>(
                                   value: "--Select City--",
                                   child: Center(
-                                    child: Text(
-                                      "--Select City--",
-                                      style: TextStyle(
-                                        color: Color(0xffFF0E0E),
+                                    child: Center(
+                                      child: Text(
+                                        "--Select City--",
+                                        style: TextStyle(
+                                          color: Color(0xffFF0E0E),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -403,11 +503,11 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                                         bloodbankname:
                                             bloodbanknameController.text,
                                         email: emailController.text,
-                                        bloodgroup: bloodgroupController.text,
                                         availablebloodunit: int.parse(
                                             availablebloodunitController.text),
                                         contactno: contactnoController.text,
                                         password: passwordController.text,
+                                        bloodgroup: selectedblood,
                                         city: selectedCity,
                                         id: value.user!.uid);
                                     createUser(
@@ -452,6 +552,17 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
 
   Future createUser(
       {required BloodBankUserModel user, required String userId}) async {
+    UserModel userModel = UserModel(
+      id: user.id,
+      name: user.bloodbankname,
+      email: user.email,
+      userType: "bloodbank",
+    );
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .set(userModel.toJson());
+
     FirebaseFirestore.instance
         .collection('bloodbankdetails')
         .doc(userId)

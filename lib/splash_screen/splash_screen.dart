@@ -1,4 +1,3 @@
-
 import 'package:blood_bank/splash_screen/splash_screen_services.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +10,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   SplashScreenServices splashScreen = SplashScreenServices();
 
   @override

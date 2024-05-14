@@ -39,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String name = '';
   String phoneno = '';
-  String uid = '';
+  String receiverUid = '';
 
   @override
   void initState() {
@@ -146,8 +146,14 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: ListView.builder(
                               itemCount: messageModelList.length,
                               itemBuilder: (BuildContext context, int index) {
+                                TextAlign textAlign =
+                                    messageModelList[index].reciverid ==
+                                            receiverUid
+                                        ? TextAlign.left
+                                        : TextAlign.right;
                                 return Text(
                                   messageModelList[index].message,
+                                  textAlign: textAlign,
                                 );
                               },
                             ),
@@ -173,7 +179,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> getCurrentUserDetail() async {
-    User? user = _auth.currentUser;
     // _seekerUserModel = await _firebaseFirestore
     //     .collection('seekerdetails')
     //     .doc(user!.uid)
@@ -185,15 +190,14 @@ class _ChatScreenState extends State<ChatScreen> {
     // );
     // seekerName = _seekerUserModel!.fullname;
 
-    uid = user!.uid;
     if (widget.bloodBankUserModel != null) {
       name = widget.bloodBankUserModel!.bloodbankname;
       phoneno = widget.bloodBankUserModel!.contactno;
-      uid = widget.bloodBankUserModel!.id;
+      receiverUid = widget.bloodBankUserModel!.id;
     } else {
       name = widget.donorUserModel!.fullname;
       phoneno = widget.donorUserModel!.contactno;
-      uid = widget.donorUserModel!.id;
+      receiverUid = widget.donorUserModel!.id;
     }
     setState(() {});
   }
@@ -210,14 +214,14 @@ class _ChatScreenState extends State<ChatScreen> {
     MessageModel messageModel = MessageModel(
       mesgid: messageId,
       senderid: currentUserID,
-      reciverid: uid,
+      reciverid: receiverUid,
       time: time,
       message: message,
     );
 
     _firebaseFirestore
         .collection('Messages')
-        .doc(uid + currentUserID)
+        .doc(receiverUid + currentUserID)
         .collection('Chat')
         .doc(messageModel.mesgid)
         .set(messageModel.toJson());
@@ -242,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return _firebaseFirestore
         .collection('Messages')
-        .doc(uid + currentUserID)
+        .doc(receiverUid + currentUserID)
         .collection('Chat')
         .snapshots()
         .map(
