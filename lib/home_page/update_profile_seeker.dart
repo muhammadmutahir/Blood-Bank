@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/home_page.dart';
+import 'package:blood_bank/models/user_model.dart';
 import 'package:blood_bank/utils/utils.dart';
 import 'package:blood_bank/widgets/whiteroundbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,6 +30,8 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
+  UserModel? userModel;
+
   Uint8List? image;
 
   @override
@@ -53,21 +57,55 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   Future<void> _getCurrentUser() async {
     User? user = _auth.currentUser;
     if (user != null) {
-      DocumentSnapshot userdata =
+      final value =
           await _firebaseFirestore.collection("users").doc(user.uid).get();
+
+      userModel = UserModel.fromJson(value.data()!);
       setState(() {
-        fullnameController.text = userdata['name'];
-        emailController.text =
-            userdata['email']; // set the email controller text
+        fullnameController.text = userModel!.name;
+        emailController.text = userModel!.email;
       });
     }
   }
 
   Future<void> _updateUserProfile() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      await _firebaseFirestore.collection("users").doc(user.uid).update({
+    // User? user = _auth.currentUser;
+    // if (user != null) {
+    //   await _firebaseFirestore.collection("users").doc(user.uid).update({
+    //     'name': fullnameController.text,
+    //   });
+    // }
+
+    if (userModel!.userType == "seeker") {
+      await _firebaseFirestore.collection("users").doc(userModel!.id).update({
         'name': fullnameController.text,
+      });
+      await _firebaseFirestore
+          .collection("seekerdetails")
+          .doc(userModel!.id)
+          .update({
+        'fullname': fullnameController.text,
+      });
+    } else if (userModel!.userType == "donor") {
+      await _firebaseFirestore.collection("user").doc(userModel!.id).update({
+        'name': fullnameController.text,
+      });
+      await _firebaseFirestore
+          .collection("donordetails")
+          .doc(userModel!.id)
+          .update({
+        'fullname': fullnameController.text,
+      });
+    } else {
+      log(userModel!.id);
+      await _firebaseFirestore.collection("user").doc(userModel!.id).update({
+        'name': fullnameController.text,
+      });
+      await _firebaseFirestore
+          .collection("bloodbankdetails")
+          .doc(userModel!.id)
+          .update({
+        'bloodbankname': fullnameController.text,
       });
     }
   }
@@ -173,11 +211,9 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
                         const SizedBox(
                           height: 10,
                         ),
-                        // set the read-only property of the email text field to true
                         TextFormField(
-                          controller:
-                              emailController, // set the controller to emailController
-                          readOnly: true, // make the text field read-only
+                          controller: emailController,
+                          readOnly: true,
                           keyboardType: TextInputType.emailAddress,
                           style: const TextStyle(color: Color(0xffE5E3E3)),
                           decoration: const InputDecoration(
