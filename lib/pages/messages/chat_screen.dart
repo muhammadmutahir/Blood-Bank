@@ -203,7 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void callcontactno(String contactno) {
-    launch('tel:$contactno');
+    launchUrl(Uri.parse('tel:$contactno'));
   }
 
   void sendMessage(String message) {
@@ -211,6 +211,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
     String messageId = UidGenerator.createID();
     String time = timeToString(TimeOfDay.now());
+    String chatDocumentID = generateChatDocumentId(
+      currentUserID,
+      receiverUid,
+    );
     MessageModel messageModel = MessageModel(
       mesgid: messageId,
       senderid: currentUserID,
@@ -221,7 +225,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _firebaseFirestore
         .collection('Messages')
-        .doc(receiverUid + currentUserID)
+        .doc(chatDocumentID)
         .collection('Chat')
         .doc(messageModel.mesgid)
         .set(messageModel.toJson());
@@ -258,5 +262,11 @@ class _ChatScreenState extends State<ChatScreen> {
               )
               .toList(),
         );
+  }
+
+  String generateChatDocumentId(String senderUid, String receiverUid) {
+    List<String> userIds = [senderUid, receiverUid];
+    userIds.sort(); // Sorts the list lexicographically
+    return userIds.join('_'); // Joins the sorted list with an underscore
   }
 }
