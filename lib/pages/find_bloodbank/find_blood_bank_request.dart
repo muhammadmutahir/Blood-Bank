@@ -34,31 +34,15 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
     false,
   ];
 
-  // final List<String> gendertype = [
-  //   'Male',
-  //   'Female',
-  // ];
-  // List<bool> gendertypeselected = [
-  //   false,
-  //   false,
-  // ];
-
-  // final List<String> city = ['--Select City--', 'Lahore', 'Shorkot', 'Multan'];
-  // bool isCitySelected = false;
-
-  // String selectedCity = '';
-
   String selectedbloodType = '';
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   String selectedCity = "--Select City--";
   List<String> cities = [
-    "Karachi",
     "Lahore",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
     "Multan",
+    "Islamabad",
+    "Faisalabad",
   ];
 
   @override
@@ -203,30 +187,6 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
           SizedBox(
             height: 15,
           ),
-          // Container(
-          //   margin: EdgeInsets.only(left: 45),
-          //   padding: const EdgeInsets.all(5),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(width: 1),
-          //     borderRadius: BorderRadius.circular(10),
-          //   ),
-          //   child: DropdownButton<String>(
-          //     underline: Container(),
-          //     value: city.first,
-          //     onChanged: (String? value) => _dropDownButtonOnTap(value),
-          //     items: city.map<DropdownMenuItem<String>>((String value) {
-          //       return DropdownMenuItem<String>(
-          //         value: value,
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(left: 45),
-          //           child: Text(value),
-          //         ),
-          //       );
-          //     }).toList(),
-          //   ),
-          // ),
-          // Visibility(visible: isCitySelected, child: Text(selectedCity)),
-
           Padding(
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: Container(
@@ -289,7 +249,6 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
               ),
             ),
           ),
-
           SizedBox(
             height: 60,
           ),
@@ -318,14 +277,6 @@ class _FindBloodBankRequestState extends State<FindBloodBankRequest> {
     }
     setState(() {});
   }
-
-//   void _dropDownButtonOnTap(String? value) {
-//     setState(() {
-//       selectedCity = value!;
-//       isCitySelected = true;
-//     });
-//     print(selectedCity);
-//   }
 }
 
 Widget button(String text, VoidCallback onPressed) {

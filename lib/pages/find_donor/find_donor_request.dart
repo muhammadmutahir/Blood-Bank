@@ -43,12 +43,10 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
 
   String selectedCity = "--Select City--";
   List<String> cities = [
-    "Karachi",
     "Lahore",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
     "Multan",
+    "Islamabad",
+    "Faisalabad",
   ];
 
   @override

@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(100),
+                    padding: EdgeInsets.all(90),
                     child: Text(
                       "WELCOME $name".toUpperCase(),
                       style: TextStyle(color: whiteColor, fontSize: 15),
@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                         Positioned(
                           top: 150,
-                          left: 40,
+                          left: 2,
                           child: Text(
                             name.toUpperCase(),
                             style: TextStyle(
@@ -225,51 +225,53 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ListTile(
                   leading: const Icon(
-                    Icons.settings,
+                    Icons.account_box,
                     color: Colors.red,
                   ),
                   title: const Text('Update Profile'),
                   onTap: () {
-                    // Navigator.push(context,
-                    // MaterialPageRoute(builder: (context)=> updateProfileSeeker()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateProfileSeeker()));
                   },
                 ),
                 const Divider(
                   color: Colors.grey,
                 ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.settings,
-                    color: Colors.red,
-                  ),
-                  title: const Text('Settings'),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.history,
-                    color: Colors.red,
-                  ),
-                  title: const Text('History'),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.grey,
-                ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.local_hospital,
-                    color: Colors.red,
-                  ),
-                  title: const Text('Donation'),
-                  onTap: () {},
-                ),
-                const Divider(
-                  color: Colors.grey,
-                ),
+                // ListTile(
+                //   leading: const Icon(
+                //     Icons.settings,
+                //     color: Colors.red,
+                //   ),
+                //   title: const Text('Settings'),
+                //   onTap: () {},
+                // ),
+                // const Divider(
+                //   color: Colors.grey,
+                // ),
+                // ListTile(
+                //   leading: const Icon(
+                //     Icons.history,
+                //     color: Colors.red,
+                //   ),
+                //   title: const Text('History'),
+                //   onTap: () {},
+                // ),
+                // const Divider(
+                //   color: Colors.grey,
+                // ),
+                // ListTile(
+                //   leading: const Icon(
+                //     Icons.local_hospital,
+                //     color: Colors.red,
+                //   ),
+                //   title: const Text('Donation'),
+                //   onTap: () {},
+                // ),
+                // const Divider(
+                //   color: Colors.grey,
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 170, left: 20),
                   child: Container(
@@ -363,16 +365,4 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-
-  // Future<void> getCurrentUser() async {
-  //   User? user = _auth.currentUser;
-
-  //   if (widget.seekerUserModel != null) {
-  //     name = widget.seekerUserModel!.fullname;
-  //   } else if (widget.donorUserModel != null) {
-  //     name = widget.donorUserModel!.fullname;
-  //   } else {
-  //     name = widget.bloodBankUserModel!.bloodbankname;
-  //   }
-  // }
 }

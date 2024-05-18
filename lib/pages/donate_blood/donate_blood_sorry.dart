@@ -1,4 +1,5 @@
 import 'package:blood_bank/components/constants.dart';
+import 'package:blood_bank/home_page/home_page.dart';
 import 'package:blood_bank/pages/login.dart';
 import 'package:blood_bank/widgets/appbar_container.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,8 @@ class _DonateBloodSorryState extends State<DonateBloodSorry> {
                   height: 520,
                   width: 360,
                   child: Column(
-                    
                     children: [
-                       SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
                       Image(
@@ -50,10 +50,8 @@ class _DonateBloodSorryState extends State<DonateBloodSorry> {
                         height: 80,
                       ),
                       button('Back', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Login()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()));
                       }),
                     ],
                   ),

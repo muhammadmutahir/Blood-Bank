@@ -25,7 +25,6 @@ class _SeekerRegisterState extends State<SeekerRegister> {
 
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -34,7 +33,6 @@ class _SeekerRegisterState extends State<SeekerRegister> {
   void dispose() {
     fullnameController.dispose();
     emailController.dispose();
-    usernameController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -54,13 +52,6 @@ class _SeekerRegisterState extends State<SeekerRegister> {
     }
     if (!value.contains('@')) {
       return 'Invalid email address';
-    }
-    return null;
-  }
-
-  String? validateUsername(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a username';
     }
     return null;
   }
@@ -175,32 +166,6 @@ class _SeekerRegisterState extends State<SeekerRegister> {
                         Padding(
                           padding: const EdgeInsets.only(left: 25, right: 25),
                           child: TextFormField(
-                            controller: usernameController,
-                            keyboardType: TextInputType.text,
-                            style: const TextStyle(color: Color(0xffE5E3E3)),
-                            decoration: const InputDecoration(
-                                labelText: 'Username',
-                                labelStyle:
-                                    TextStyle(color: whiteColor, fontSize: 18),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                errorStyle: TextStyle(color: Colors.yellow),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow),
-                                )),
-                            validator: validateUsername,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
-                          child: TextFormField(
                             obscureText: obsecureText,
                             controller: passwordController,
                             keyboardType: TextInputType.text,
@@ -263,7 +228,6 @@ class _SeekerRegisterState extends State<SeekerRegister> {
                                         final user = SeekerUserModel(
                                           fullname: fullnameController.text,
                                           email: emailController.text,
-                                          username: usernameController.text,
                                           password: passwordController.text,
                                           id: value.user!.uid,
                                         );

@@ -2,7 +2,6 @@ class DonorUserModel {
   String id;
   final String fullname;
   final String email;
-  final String username;
   final int age;
   final String bloodgroup;
   final String city;
@@ -13,7 +12,6 @@ class DonorUserModel {
     this.id = '',
     required this.fullname,
     required this.email,
-    required this.username,
     required this.age,
     required this.bloodgroup,
     required this.city,
@@ -25,7 +23,6 @@ class DonorUserModel {
         'id': id,
         'fullname': fullname,
         'email': email,
-        'username': username,
         'age': age,
         'bloodgroup': bloodgroup,
         'city': city,
@@ -38,7 +35,6 @@ class DonorUserModel {
       id: json['id'] ?? '',
       fullname: json['fullname'] ?? '',
       email: json['email'] ?? '',
-      username: json['username'] ?? '',
       age: json['age'] ?? 0,
       bloodgroup: json['bloodgroup'] ?? '',
       city: json['city'] ?? '',

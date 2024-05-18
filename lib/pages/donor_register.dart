@@ -27,11 +27,10 @@ class _DonorRegisterState extends State<DonorRegister> {
   final _formKey = GlobalKey<FormState>();
 
   String selectedCity = "--Select City--";
-  String selectedblood = "--Select Blood Type--";
+  String selectedblood = "Select Blood Type";
 
   TextEditingController fullnameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController bloodgroupController = TextEditingController();
   TextEditingController cityController = TextEditingController();
@@ -41,12 +40,10 @@ class _DonorRegisterState extends State<DonorRegister> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<String> cities = [
-    "Karachi",
     "Lahore",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
     "Multan",
+    "Islamabad",
+    "Faisalabad",
   ];
 
   List<String> bloodtypes = [
@@ -64,7 +61,6 @@ class _DonorRegisterState extends State<DonorRegister> {
   void dispose() {
     fullnameController.dispose();
     emailController.dispose();
-    usernameController.dispose();
     ageController.dispose();
     bloodgroupController.dispose();
     cityController.dispose();
@@ -87,13 +83,6 @@ class _DonorRegisterState extends State<DonorRegister> {
     }
     if (!value.contains('@')) {
       return 'Invalid email address';
-    }
-    return null;
-  }
-
-  String? validateUsername(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a username';
     }
     return null;
   }
@@ -225,29 +214,6 @@ class _DonorRegisterState extends State<DonorRegister> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
-                        child: TextFormField(
-                          controller: usernameController,
-                          keyboardType: TextInputType.text,
-                          style: const TextStyle(color: Color(0xffE5E3E3)),
-                          decoration: const InputDecoration(
-                              labelText: 'Username',
-                              labelStyle:
-                                  TextStyle(color: whiteColor, fontSize: 18),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: whiteColor),
-                              ),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.yellow),
-                              )),
-                          validator: validateUsername,
-                        ),
-                      ),
-                      Padding(
                         padding: const EdgeInsets.only(
                           left: 25,
                           right: 25,
@@ -364,9 +330,9 @@ class _DonorRegisterState extends State<DonorRegister> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        padding: const EdgeInsets.only(left: 25, right: 16),
                         child: Container(
-                          width: 210,
+                          width: 205,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: Colors.white, width: 1),
@@ -382,10 +348,10 @@ class _DonorRegisterState extends State<DonorRegister> {
                               },
                               items: [
                                 DropdownMenuItem<String>(
-                                  value: "--Select Blood Type--",
+                                  value: "Select Blood Type",
                                   child: Center(
                                     child: Text(
-                                      "--Select Blood Type--",
+                                      "Select Blood Type",
                                       style: TextStyle(
                                         color: Color(0xffFF0E0E),
                                       ),
@@ -513,7 +479,6 @@ class _DonorRegisterState extends State<DonorRegister> {
                                     final user = DonorUserModel(
                                       fullname: fullnameController.text,
                                       email: emailController.text,
-                                      username: usernameController.text,
                                       age: int.parse(ageController.text),
                                       city: selectedCity,
                                       bloodgroup: selectedblood,

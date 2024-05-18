@@ -20,7 +20,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   String selectedCity = "--Select City--";
-  String selectedblood = "--Select Blood Type--";
+  String selectedblood = "Select Blood Type";
 
   TextEditingController bloodbanknameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -33,12 +33,10 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<String> cities = [
-    "Karachi",
     "Lahore",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
     "Multan",
+    "Islamabad",
+    "Faisalabad",
   ];
 
   List<String> bloodtypes = [
@@ -213,29 +211,6 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                           validator: validateEmail,
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 25, right: 25),
-                      //   child: TextFormField(
-                      //     controller: bloodgroupController,
-                      //     keyboardType: TextInputType.text,
-                      //     style: const TextStyle(color: Color(0xffE5E3E3)),
-                      //     decoration: const InputDecoration(
-                      //         labelText: 'Blood Group',
-                      //         labelStyle:
-                      //             TextStyle(color: whiteColor, fontSize: 18),
-                      //         enabledBorder: UnderlineInputBorder(
-                      //           borderSide: BorderSide(color: whiteColor),
-                      //         ),
-                      //         focusedBorder: UnderlineInputBorder(
-                      //           borderSide: BorderSide(color: whiteColor),
-                      //         ),
-                      //         errorStyle: TextStyle(color: Colors.yellow),
-                      //         errorBorder: UnderlineInputBorder(
-                      //           borderSide: BorderSide(color: Colors.yellow),
-                      //         )),
-                      //     validator: validatebloodgroup,
-                      //   ),
-                      // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
                         child: TextFormField(
@@ -299,7 +274,6 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                           validator: validatecontactno,
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
                         child: TextFormField(
@@ -351,7 +325,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 25),
+                        padding: const EdgeInsets.only(left: 25, right: 25),
                         child: Container(
                           width: 210,
                           decoration: BoxDecoration(
@@ -369,10 +343,10 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                               },
                               items: [
                                 DropdownMenuItem<String>(
-                                  value: "--Select Blood Type--",
+                                  value: "Select Blood Type",
                                   child: Center(
                                     child: Text(
-                                      "--Select Blood Type--",
+                                      "Select Blood Type",
                                       style: TextStyle(
                                         color: Color(0xffFF0E0E),
                                       ),
