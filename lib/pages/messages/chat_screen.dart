@@ -168,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               decoration: InputDecoration(
                                 hintText: "Type your message...",
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(23),
                                 ),
                               ),
                             ),
@@ -183,6 +183,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    )
                   ],
                 ),
               );
@@ -226,7 +229,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
 
     _firebaseFirestore
-        .collection('Messages')
+        .collection('chats')
         .doc(chatDocumentID)
         .collection('Chat')
         .doc(messageModel.mesgid)
@@ -253,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> {
     String docId = generateChatDocumentId(currentUserID, receiverUid);
 
     return _firebaseFirestore
-        .collection('Messages')
+        .collection('chats')
         .doc(docId)
         .collection('Chat')
         .snapshots()
