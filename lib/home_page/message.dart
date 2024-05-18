@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:blood_bank/components/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,12 @@ class Message extends StatefulWidget {
 }
 
 class _MessageState extends State<Message> {
+  @override
+  void initState() {
+    super.initState();
+    getSingleUserMesages();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -88,15 +96,15 @@ class _MessageState extends State<Message> {
     );
   }
 
-  Future<void> getSingleUserMessages() async {
+  Future<void> getSingleUserMesages() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    List<String> docIdList = [];
+    List<String> uidList = [];
     QuerySnapshot querySnapshot =
-        await firebaseFirestore.collection('Messages').get();
-
+        await firebaseFirestore.collection('chats').get();
+    log(querySnapshot.docs.length.toString());
     for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      docIdList.add(doc.id);
-      print("Document ID: ${doc.id}");
+      uidList.add(doc.id);
+      log(doc.id);
     }
   }
 }

@@ -168,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               decoration: InputDecoration(
                                 hintText: "Type your message...",
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                  borderRadius: BorderRadius.circular(23),
                                 ),
                               ),
                             ),
@@ -183,6 +183,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    )
                   ],
                 ),
               );
@@ -213,10 +216,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     String messageId = UidGenerator.createID();
     String time = timeToString(TimeOfDay.now());
-    String chatDocumentID = generateChatDocumentId(
-      currentUserID,
-      receiverUid,
-    );
+
     MessageModel messageModel = MessageModel(
       mesgid: messageId,
       senderid: currentUserID,
@@ -226,9 +226,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
 
     _firebaseFirestore
-        .collection('Messages')
-        .doc(chatDocumentID)
-        .collection('Chat')
+        .collection('chats')
         .doc(messageModel.mesgid)
         .set(messageModel.toJson());
     textController.clear();
@@ -250,20 +248,19 @@ class _ChatScreenState extends State<ChatScreen> {
   Stream<List<MessageModel>> getMessageStream() {
     String currentUserID = _auth.currentUser!.uid;
 
-    String docId = generateChatDocumentId(currentUserID, receiverUid);
-
-    return _firebaseFirestore
-        .collection('Messages')
-        .doc(docId)
-        .collection('Chat')
-        .snapshots()
-        .map(
+    return _firebaseFirestore.collection('chats').snapshots().map(
           (snapshot) => snapshot.docs
               .map(
                 (doc) => MessageModel.fromJson(
                   doc.data(),
                 ),
               )
+              .where((messageModel) =>
+                  messageModel.senderid == currentUserID ||
+                  messageModel.reciverid == currentUserID)
+              .where((messageModel) =>
+                  messageModel.senderid == receiverUid ||
+                  messageModel.reciverid == receiverUid)
               .toList()
             ..sort((a, b) => _parseTime(a.time).compareTo(_parseTime(b.time))),
         );
@@ -272,12 +269,6 @@ class _ChatScreenState extends State<ChatScreen> {
   DateTime _parseTime(String time) {
     final format = DateFormat('hh:mm a');
     return format.parse(time);
-  }
-
-  String generateChatDocumentId(String senderUid, String receiverUid) {
-    List<String> userIds = [senderUid, receiverUid];
-    userIds.sort();
-    return userIds.join('_');
   }
 }
 
