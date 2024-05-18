@@ -1,4 +1,5 @@
 import 'package:blood_bank/components/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Message extends StatefulWidget {
@@ -85,5 +86,17 @@ class _MessageState extends State<Message> {
         ),
       ),
     );
+  }
+
+  Future<void> getSingleUserMessages() async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    List<String> docIdList = [];
+    QuerySnapshot querySnapshot =
+        await firebaseFirestore.collection('Messages').get();
+
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      docIdList.add(doc.id);
+      print("Document ID: ${doc.id}");
+    }
   }
 }
