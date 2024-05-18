@@ -1,7 +1,8 @@
-import 'dart:developer';
-
 import 'package:blood_bank/components/constants.dart';
+import 'package:blood_bank/models/message_model.dart';
+import 'package:blood_bank/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Message extends StatefulWidget {
@@ -13,10 +14,13 @@ class Message extends StatefulWidget {
 }
 
 class _MessageState extends State<Message> {
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  List<MessageModel> messageModelList = [];
+  List<String> userNameList = [];
   @override
   void initState() {
     super.initState();
-    getSingleUserMesages();
+    getMessageList();
   }
 
   @override
@@ -52,59 +56,66 @@ class _MessageState extends State<Message> {
           centerTitle: true,
         ),
         backgroundColor: whiteColor,
-        body: ListView(
-          children: const [
-            ListTile(
+        body: ListView.builder(
+          itemCount: messageModelList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
               title: Text(
-                'Message 1',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                userNameList[index],
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                'This is the subheading for message 1',
-                style: TextStyle(fontSize: 14),
+                messageModelList[index].message,
+                style: const TextStyle(fontSize: 14),
               ),
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ListTile(
-              title: Text(
-                'Message 2',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                'This is the subheading for message 2',
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-            Divider(
-              color: Colors.grey,
-            ),
-            ListTile(
-              title: Text(
-                'Message 3',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                'This is the subheading for message 3',
-                style: TextStyle(fontSize: 14),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Future<void> getSingleUserMesages() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    List<String> uidList = [];
-    QuerySnapshot querySnapshot =
-        await firebaseFirestore.collection('chats').get();
-    log(querySnapshot.docs.length.toString());
-    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      uidList.add(doc.id);
-      log(doc.id);
+  Future<void> getMessageList() async {
+    String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final value = await firebaseFirestore.collection("chats").get();
+    for (int i = 0; i < value.docs.length; i++) {
+      final data = value.docs[i].data();
+      MessageModel messageModel = MessageModel.fromJson(data);
+      if (messageModelList.isEmpty &&
+          (messageModel.senderid == currentUserId ||
+              messageModel.reciverid == currentUserId)) {
+        messageModelList.add(messageModel);
+        String name = await getUserModel(currentUserId == messageModel.senderid
+            ? messageModel.reciverid
+            : messageModel.senderid);
+        userNameList.add(name);
+      } else {
+        // messageModelList.add(messageModel);
+        if (currentUserId == messageModel.senderid) {
+          for (int j = 0; j < messageModelList.length; j++) {
+            if (messageModel.senderid != messageModelList[j].senderid) {
+              messageModelList.removeWhere(
+                  (model) => model.senderid == messageModel.senderid);
+            }
+          }
+        } else {
+          for (int j = 0; j < messageModelList.length; j++) {
+            if (messageModel.reciverid != messageModelList[j].reciverid) {
+              messageModelList.removeWhere(
+                  (model) => model.reciverid == messageModel.reciverid);
+            }
+          }
+        }
+      }
     }
+    setState(() {});
+  }
+
+  Future<String> getUserModel(String userId) async {
+    final value = await firebaseFirestore.collection('users').doc(userId).get();
+    final data = value.data();
+    UserModel userModel = UserModel.fromJson(data!);
+    return userModel.name;
   }
 }
