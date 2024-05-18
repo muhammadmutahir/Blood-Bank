@@ -24,8 +24,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController fullnameController = TextEditingController();
-  final TextEditingController emailController =
-      TextEditingController(); // added the email controller
+  final TextEditingController emailController = TextEditingController();
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -43,7 +42,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   @override
   void dispose() {
     fullnameController.dispose();
-    emailController.dispose(); // added the email controller dispose
+    emailController.dispose();
     super.dispose();
   }
 
@@ -87,7 +86,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
         'fullname': fullnameController.text,
       });
     } else if (userModel!.userType == "donor") {
-      await _firebaseFirestore.collection("user").doc(userModel!.id).update({
+      await _firebaseFirestore.collection("users").doc(userModel!.id).update({
         'name': fullnameController.text,
       });
       await _firebaseFirestore
@@ -98,7 +97,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
       });
     } else {
       log(userModel!.id);
-      await _firebaseFirestore.collection("user").doc(userModel!.id).update({
+      await _firebaseFirestore.collection("users").doc(userModel!.id).update({
         'name': fullnameController.text,
       });
       await _firebaseFirestore
