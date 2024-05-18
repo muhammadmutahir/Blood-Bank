@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:blood_bank/components/constants.dart';
+import 'package:blood_bank/home_page/message.dart';
 import 'package:blood_bank/home_page/update_profile_seeker.dart';
 import 'package:blood_bank/models/blood_bank_user_model.dart';
 import 'package:blood_bank/models/donor_user_model.dart';
@@ -239,17 +240,20 @@ class _HomePageState extends State<HomePage> {
                 const Divider(
                   color: Colors.grey,
                 ),
-                // ListTile(
-                //   leading: const Icon(
-                //     Icons.settings,
-                //     color: Colors.red,
-                //   ),
-                //   title: const Text('Settings'),
-                //   onTap: () {},
-                // ),
-                // const Divider(
-                //   color: Colors.grey,
-                // ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.message,
+                    color: Colors.red,
+                  ),
+                  title: const Text('Messages'),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Message()));
+                  },
+                ),
+                const Divider(
+                  color: Colors.grey,
+                ),
                 // ListTile(
                 //   leading: const Icon(
                 //     Icons.history,

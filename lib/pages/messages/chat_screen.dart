@@ -140,34 +140,45 @@ class _ChatScreenState extends State<ChatScreen> {
                       height: 50,
                     ),
                     messageModelList == null || messageModelList.isEmpty
-                        ? Text("No messages found")
+                        ? const Text("No messages found")
                         : SizedBox(
                             height: 400,
                             child: ListView.builder(
                               itemCount: messageModelList.length,
                               itemBuilder: (BuildContext context, int index) {
-                                TextAlign textAlign =
-                                    messageModelList[index].reciverid ==
-                                            receiverUid
-                                        ? TextAlign.right
-                                        : TextAlign.left;
-                                return Text(
-                                  messageModelList[index].message,
-                                  textAlign: textAlign,
+                                MessageModel message = messageModelList[index];
+                                bool isSender =
+                                    message.senderid == _auth.currentUser!.uid;
+                                return MessageBubble(
+                                  message: message,
+                                  isSender: isSender,
                                 );
                               },
                             ),
                           ),
-                    TextFormField(
-                      controller: textController,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () => sendMessage(textController.text),
-                          icon: const Icon(
-                            Icons.send,
-                            color: Colors.red,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: textController,
+                              decoration: InputDecoration(
+                                hintText: "Type your message...",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          IconButton(
+                            onPressed: () => sendMessage(textController.text),
+                            icon: const Icon(
+                              Icons.send,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -179,17 +190,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> getCurrentUserDetail() async {
-    // _seekerUserModel = await _firebaseFirestore
-    //     .collection('seekerdetails')
-    //     .doc(user!.uid)
-    //     .get()
-    //     .then(
-    //   (value) {
-    //     return SeekerUserModel.fromJson(value.data()!);
-    //   },
-    // );
-    // seekerName = _seekerUserModel!.fullname;
-
     if (widget.bloodBankUserModel != null) {
       name = widget.bloodBankUserModel!.bloodbankname;
       phoneno = widget.bloodBankUserModel!.contactno;
@@ -268,13 +268,62 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   DateTime _parseTime(String time) {
-    final format = DateFormat.Hm(); // HH:mm
+    final format = DateFormat('hh:mm a');
     return format.parse(time);
   }
 
   String generateChatDocumentId(String senderUid, String receiverUid) {
     List<String> userIds = [senderUid, receiverUid];
-    userIds.sort(); // Sorts the list lexicographically
-    return userIds.join('_'); // Joins the sorted list with an underscore
+    userIds.sort();
+    return userIds.join('_');
+  }
+}
+
+class MessageBubble extends StatelessWidget {
+  final MessageModel message;
+  final bool isSender;
+
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.isSender,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      child: Align(
+        alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          constraints: BoxConstraints(
+            // Added constraint to prevent full-width
+            maxWidth: MediaQuery.of(context).size.width * 0.75,
+          ),
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            color: isSender ? Colors.grey[300] : Colors.red[100],
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                message.message,
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              const SizedBox(height: 4.0),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  message.time,
+                  style: const TextStyle(fontSize: 12.0, color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
