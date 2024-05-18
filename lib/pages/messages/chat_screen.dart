@@ -149,8 +149,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                 TextAlign textAlign =
                                     messageModelList[index].reciverid ==
                                             receiverUid
-                                        ? TextAlign.left
-                                        : TextAlign.right;
+                                        ? TextAlign.right
+                                        : TextAlign.left;
                                 return Text(
                                   messageModelList[index].message,
                                   textAlign: textAlign,
@@ -248,9 +248,11 @@ class _ChatScreenState extends State<ChatScreen> {
   Stream<List<MessageModel>> getMessageStream() {
     String currentUserID = _auth.currentUser!.uid;
 
+    String docId = generateChatDocumentId(currentUserID, receiverUid);
+
     return _firebaseFirestore
         .collection('Messages')
-        .doc(receiverUid + currentUserID)
+        .doc(docId)
         .collection('Chat')
         .snapshots()
         .map(
@@ -260,8 +262,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   doc.data(),
                 ),
               )
-              .toList(),
+              .toList()
+            ..sort((a, b) => _parseTime(a.time).compareTo(_parseTime(b.time))),
         );
+  }
+
+  DateTime _parseTime(String time) {
+    final format = DateFormat.Hm(); // HH:mm
+    return format.parse(time);
   }
 
   String generateChatDocumentId(String senderUid, String receiverUid) {
