@@ -88,6 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               List<MessageModel>? messageModelList = snapshot.data;
               return SingleChildScrollView(
+                //reverse: true,
                 child: Column(
                   children: [
                     Padding(
@@ -137,13 +138,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 50,
+                      height: 20,
                     ),
                     messageModelList == null || messageModelList.isEmpty
                         ? const Text("No messages found")
                         : SizedBox(
-                            height: 400,
+                            height: 500,
                             child: ListView.builder(
+                              //shrinkWrap: true,
                               itemCount: messageModelList.length,
                               itemBuilder: (BuildContext context, int index) {
                                 MessageModel message = messageModelList[index];
@@ -157,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
                           Expanded(
@@ -292,32 +294,34 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Align(
         alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
+          //hkshdkfd..........................
           constraints: BoxConstraints(
-            // Added constraint to prevent full-width
-            maxWidth: MediaQuery.of(context).size.width * 0.75,
+            maxWidth: MediaQuery.of(context).size.width * 0.70,
           ),
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: isSender ? Colors.grey[300] : Colors.red[100],
-            borderRadius: BorderRadius.circular(8.0),
+            color: isSender
+                ? Color.fromARGB(255, 208, 202, 202)
+                : const Color.fromARGB(255, 232, 177, 182),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 message.message,
-                style: const TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 4.0),
+              const SizedBox(height: 2),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
                   message.time,
-                  style: const TextStyle(fontSize: 12.0, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
             ],
