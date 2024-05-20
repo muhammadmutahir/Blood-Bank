@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatPage extends StatefulWidget {
   static const String id = 'chat_screen';
-  const ChatScreen({
+  const ChatPage({
     super.key,
     required this.bloodBankUserModel,
     required this.donorUserModel,
@@ -24,10 +24,10 @@ class ChatScreen extends StatefulWidget {
   final DonorUserModel? donorUserModel;
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatPageState extends State<ChatPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 

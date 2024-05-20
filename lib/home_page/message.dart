@@ -2,6 +2,7 @@ import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/models/blood_bank_user_model.dart';
 import 'package:blood_bank/models/donor_user_model.dart';
 import 'package:blood_bank/models/message_model.dart';
+import 'package:blood_bank/models/seeker_user_model.dart';
 import 'package:blood_bank/models/user_model.dart';
 import 'package:blood_bank/pages/messages/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -156,7 +157,14 @@ class _MessageState extends State<Message> {
           await firebaseFirestore.collection('users').doc(userId).get();
       final data = value.data();
       final user = UserModel.fromJson(data!);
-      if (user.userType == 'donor') {
+      if (user.userType == 'seeker') {
+        final seekerValue = await firebaseFirestore
+            .collection('seekerdetails')
+            .doc(userId)
+            .get();
+        final seekerData = seekerValue.data();
+        return SeekerUserModel.fromJson(seekerData!).fullname;
+      } else if (user.userType == 'donor') {
         final donorValue = await firebaseFirestore
             .collection('donordetails')
             .doc(userId)
