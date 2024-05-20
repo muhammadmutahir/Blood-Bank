@@ -187,16 +187,11 @@ class _HomePageState extends State<HomePage> {
                         right: 0, left: 60, top: 55, bottom: 20),
                     child: Stack(
                       children: [
-                        image != null
-                            ? CircleAvatar(
-                                radius: 64,
-                                backgroundImage: MemoryImage(image!),
-                              )
-                            : const CircleAvatar(
-                                radius: 64,
-                                backgroundImage: NetworkImage(
-                                    'https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
-                              ),
+                        CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(
+                              'https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
+                        ),
                         Positioned(
                           top: 150,
                           left: 2,
@@ -209,14 +204,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        Positioned(
-                          top: 90,
-                          left: 80,
-                          child: IconButton(
-                            onPressed: selectImage,
-                            icon: const Icon(Icons.add_a_photo),
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -348,14 +335,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Uint8List? image;
-  void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      image = img;
-    });
   }
 
   Future<void> _getCurrentUser() async {

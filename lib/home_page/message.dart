@@ -1,6 +1,9 @@
 import 'package:blood_bank/components/constants.dart';
+import 'package:blood_bank/models/blood_bank_user_model.dart';
+import 'package:blood_bank/models/donor_user_model.dart';
 import 'package:blood_bank/models/message_model.dart';
 import 'package:blood_bank/models/user_model.dart';
+import 'package:blood_bank/pages/messages/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +72,40 @@ class _MessageState extends State<Message> {
                 messageModelList[index].message,
                 style: const TextStyle(fontSize: 14),
               ),
+              onTap: () async {
+                /// Added onTap callback
+                String otherUserId = messageModelList[index].senderid ==
+                        FirebaseAuth.instance.currentUser!.uid
+                    ? messageModelList[index].reciverid
+                    : messageModelList[index].senderid;
+                BloodBankUserModel? bloodBankUserModel;
+                DonorUserModel? donorUserModel;
+                if (otherUserId.startsWith('donor')) {
+                  final value = await firebaseFirestore
+                      .collection('donordetails')
+                      .doc(otherUserId)
+                      .get();
+                  final data = value.data();
+                  donorUserModel = DonorUserModel.fromJson(data!);
+                } else {
+                  final value = await firebaseFirestore
+                      .collection('users')
+                      .doc(otherUserId)
+                      .get();
+                  final data = value.data();
+                  bloodBankUserModel = BloodBankUserModel.fromJson(data!);
+                }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatScreen(
+                      bloodBankUserModel: bloodBankUserModel,
+                      donorUserModel: donorUserModel,
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),
@@ -79,43 +116,61 @@ class _MessageState extends State<Message> {
   Future<void> getMessageList() async {
     String currentUserId = FirebaseAuth.instance.currentUser!.uid;
     final value = await firebaseFirestore.collection("chats").get();
+    Map<String, MessageModel> latestMessages = {};
+
     for (int i = 0; i < value.docs.length; i++) {
       final data = value.docs[i].data();
       MessageModel messageModel = MessageModel.fromJson(data);
-      if (messageModelList.isEmpty &&
-          (messageModel.senderid == currentUserId ||
-              messageModel.reciverid == currentUserId)) {
-        messageModelList.add(messageModel);
-        String name = await getUserModel(currentUserId == messageModel.senderid
+
+      if (messageModel.senderid == currentUserId ||
+          messageModel.reciverid == currentUserId) {
+        String otherUserId = currentUserId == messageModel.senderid
             ? messageModel.reciverid
-            : messageModel.senderid);
-        userNameList.add(name);
-      } else {
-        // messageModelList.add(messageModel);
-        if (currentUserId == messageModel.senderid) {
-          for (int j = 0; j < messageModelList.length; j++) {
-            if (messageModel.senderid != messageModelList[j].senderid) {
-              messageModelList.removeWhere(
-                  (model) => model.senderid == messageModel.senderid);
-            }
-          }
-        } else {
-          for (int j = 0; j < messageModelList.length; j++) {
-            if (messageModel.reciverid != messageModelList[j].reciverid) {
-              messageModelList.removeWhere(
-                  (model) => model.reciverid == messageModel.reciverid);
-            }
-          }
+            : messageModel.senderid;
+
+        if (!latestMessages.containsKey(otherUserId) ||
+            messageModel.timestamp
+                    .compareTo(latestMessages[otherUserId]!.timestamp) >
+                0) {
+          latestMessages[otherUserId] = messageModel;
         }
       }
     }
+
+    messageModelList = latestMessages.values.toList();
+    userNameList = await Future.wait(latestMessages.keys.map((userId) async {
+      return getUserModel(userId);
+    }));
+
     setState(() {});
   }
 
   Future<String> getUserModel(String userId) async {
-    final value = await firebaseFirestore.collection('users').doc(userId).get();
-    final data = value.data();
-    UserModel userModel = UserModel.fromJson(data!);
-    return userModel.name;
+    if (userId.startsWith('donor')) {
+      final value =
+          await firebaseFirestore.collection('donordetails').doc(userId).get();
+      final data = value.data();
+      return DonorUserModel.fromJson(data!).fullname;
+    } else {
+      final value =
+          await firebaseFirestore.collection('users').doc(userId).get();
+      final data = value.data();
+      final user = UserModel.fromJson(data!);
+      if (user.userType == 'donor') {
+        final donorValue = await firebaseFirestore
+            .collection('donordetails')
+            .doc(userId)
+            .get();
+        final donorData = donorValue.data();
+        return DonorUserModel.fromJson(donorData!).fullname;
+      } else {
+        final bloodBankValue = await firebaseFirestore
+            .collection('bloodbankdetails')
+            .doc(userId)
+            .get();
+        final bloodBankData = bloodBankValue.data();
+        return BloodBankUserModel.fromJson(bloodBankData!).bloodbankname;
+      }
+    }
   }
 }

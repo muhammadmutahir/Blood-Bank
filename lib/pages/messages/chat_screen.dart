@@ -88,7 +88,6 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               List<MessageModel>? messageModelList = snapshot.data;
               return SingleChildScrollView(
-                //reverse: true,
                 child: Column(
                   children: [
                     Padding(
@@ -211,26 +210,27 @@ class _ChatScreenState extends State<ChatScreen> {
     launchUrl(Uri.parse('tel:$contactno'));
   }
 
-  void sendMessage(String message) {
-    String currentUserID = _auth.currentUser!.uid;
-
-    String messageId = UidGenerator.createID();
-    String time = timeToString(TimeOfDay.now());
-
-    MessageModel messageModel = MessageModel(
-      mesgid: messageId,
-      senderid: currentUserID,
-      reciverid: receiverUid,
-      time: time,
-      message: message,
-    );
-
-    _firebaseFirestore
-        .collection('chats')
-        .doc(messageModel.mesgid)
-        .set(messageModel.toJson());
-    textController.clear();
-    setState(() {});
+  void sendMessage(String message) async {
+    try {
+      String currentUserID = _auth.currentUser!.uid;
+      String messageId = UidGenerator.createID();
+      String timestamp = DateTime.now().toString();
+      MessageModel messageModel = MessageModel(
+        mesgid: messageId,
+        senderid: currentUserID,
+        reciverid: receiverUid,
+        // time: time,
+        message: message,
+        timestamp: Timestamp.now(),
+      );
+      await _firebaseFirestore
+          .collection('chats')
+          .doc(messageModel.mesgid)
+          .set(messageModel.toJson());
+      textController.clear();
+    } catch (e) {
+      print('Error sending message: $e');
+    }
   }
 
   String timeToString(TimeOfDay? timeOfDay) {
@@ -262,13 +262,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   messageModel.senderid == receiverUid ||
                   messageModel.reciverid == receiverUid)
               .toList()
-            ..sort((a, b) => _parseTime(a.time).compareTo(_parseTime(b.time))),
+            ..sort((a, b) => a.timestamp.compareTo(b.timestamp)),
         );
   }
 
-  DateTime _parseTime(String time) {
-    final format = DateFormat('hh:mm a');
-    return format.parse(time);
+  DateTime _parseTime(String timestamp) {
+    final format = DateFormat('EEE, M/d/y');
+    return format.parse(timestamp);
   }
 }
 
@@ -311,7 +311,7 @@ class MessageBubble extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  message.time,
+                  message.timestamp.toString(),
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),

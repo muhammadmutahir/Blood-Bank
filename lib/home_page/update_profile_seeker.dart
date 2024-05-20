@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:typed_data';
-
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/home_page.dart';
 import 'package:blood_bank/models/user_model.dart';
@@ -10,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class UpdateProfileSeeker extends StatefulWidget {
   const UpdateProfileSeeker({super.key});
@@ -22,15 +22,11 @@ class UpdateProfileSeeker extends StatefulWidget {
 class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-
   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-
   UserModel? userModel;
-
   Uint8List? image;
 
   @override
@@ -58,7 +54,6 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
     if (user != null) {
       final value =
           await _firebaseFirestore.collection("users").doc(user.uid).get();
-
       userModel = UserModel.fromJson(value.data()!);
       setState(() {
         fullnameController.text = userModel!.name;
@@ -68,13 +63,6 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   }
 
   Future<void> _updateUserProfile() async {
-    // User? user = _auth.currentUser;
-    // if (user != null) {
-    //   await _firebaseFirestore.collection("users").doc(user.uid).update({
-    //     'name': fullnameController.text,
-    //   });
-    // }
-
     if (userModel!.userType == "seeker") {
       await _firebaseFirestore.collection("users").doc(userModel!.id).update({
         'name': fullnameController.text,
@@ -113,6 +101,19 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       image = img;
+    });
+    uploadImageToFirebase(context);
+  }
+
+  Future<void> uploadImageToFirebase(BuildContext context) async {
+    final Uint8List file = image!;
+    final ref =
+        FirebaseStorage.instance.ref().child('profileImages/${userModel!.id}');
+    final uploadTask = ref.putData(file);
+    final snapshot = await uploadTask.whenComplete(() {});
+    final downloadUrl = await snapshot.ref.getDownloadURL();
+    await _firebaseFirestore.collection("users").doc(userModel!.id).update({
+      'profileImage': downloadUrl,
     });
   }
 
