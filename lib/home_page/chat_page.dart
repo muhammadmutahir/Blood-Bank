@@ -216,7 +216,8 @@ class _ChatPageState extends State<ChatPage> {
     try {
       String currentUserID = _auth.currentUser!.uid;
       String messageId = UidGenerator.createID();
-      String timestamp = DateTime.now().toString();
+      String time = DateTime.now().toString();
+
       MessageModel messageModel = MessageModel(
         mesgid: messageId,
         senderid: currentUserID,
