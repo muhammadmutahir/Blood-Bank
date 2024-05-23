@@ -10,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+///
 import 'package:url_launcher/url_launcher.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -240,6 +242,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (timeOfDay != null) {
       DateTime now = DateTime.now();
       time = DateFormat('hh:mm a').format(
+        /// added the date format for displaying time
         DateTime(
             now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute),
       );
@@ -313,7 +316,9 @@ class MessageBubble extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Text(
-                  message.timestamp.toString(),
+                  DateFormat('hh:mm a').format(message.timestamp.toDate()),
+
+                  /// convert timestamp to formatted time
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
