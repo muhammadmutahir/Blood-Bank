@@ -7,22 +7,22 @@ import 'package:flutter/material.dart';
 
 class SplashScreenServices {
   void islogin(BuildContext context) {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    final User = _auth.currentUser;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final User = auth.currentUser;
 
     if (User != null) {
       Timer(
-          Duration(seconds: 3),
+          const Duration(seconds: 3),
           () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => const HomePage()),
               ));
     } else {
       Timer(
-          Duration(seconds: 3),
+          const Duration(seconds: 3),
           () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Login()),
+                MaterialPageRoute(builder: (context) => const Login()),
               ));
     }
   }

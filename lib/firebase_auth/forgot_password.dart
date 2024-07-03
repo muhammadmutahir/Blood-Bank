@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/pages/login.dart';
 import 'package:blood_bank/utils/utils.dart';
@@ -16,7 +18,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
-  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -105,20 +108,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   loading: loading,
                   onTap: () {
                     setState(() {
-                        loading = true;
-                      });
+                      loading = true;
+                    });
                     _auth
                         .sendPasswordResetEmail(
                             email: emailController.text.toString())
                         .then((value) {
                       utils().toastMessage(
                           'We have sent you an email to recover passeord. Please check email.');
-                           Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Login()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Login()));
 
-                          setState(() {
+                      setState(() {
                         loading = false;
                       });
                     }).onError((error, stackTrace) {

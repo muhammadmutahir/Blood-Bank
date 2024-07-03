@@ -1,11 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/message.dart';
 import 'package:blood_bank/home_page/update_profile_seeker.dart';
-import 'package:blood_bank/models/blood_bank_user_model.dart';
-import 'package:blood_bank/models/donor_user_model.dart';
-import 'package:blood_bank/models/seeker_user_model.dart';
 import 'package:blood_bank/pages/donate_blood/donate_blood_req.dart';
 import 'package:blood_bank/pages/find_bloodbank/find_blood_bank_request.dart';
 import 'package:blood_bank/pages/find_donor/find_donor_request.dart';
@@ -15,7 +10,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = "HomePage";
@@ -35,7 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
@@ -76,10 +70,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(90),
+                    padding: const EdgeInsets.all(90),
                     child: Text(
                       "WELCOME $name".toUpperCase(),
-                      style: TextStyle(color: whiteColor, fontSize: 15),
+                      style: const TextStyle(color: whiteColor, fontSize: 15),
                     ),
                   ),
                 ),
@@ -92,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          const BoxShadow(
+                        boxShadow: const [
+                          BoxShadow(
                             color: Color.fromARGB(255, 139, 128, 128),
                             offset: Offset(
                               5.0,
@@ -162,12 +156,15 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 15,
             ),
-            button('Donate Blood', () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const DonateBloodReq()));
-            }),
+            button(
+              'Donate Blood',
+              () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DonateBloodReq()));
+              },
+            ),
           ],
         ),
       ),
@@ -187,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                         right: 0, left: 60, top: 55, bottom: 20),
                     child: Stack(
                       children: [
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 64,
                           backgroundImage: NetworkImage(
                               'https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
@@ -197,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                           left: 2,
                           child: Text(
                             name.toUpperCase(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -221,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => UpdateProfileSeeker()));
+                            builder: (context) => const UpdateProfileSeeker()));
                   },
                 ),
                 const Divider(
@@ -234,8 +231,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   title: const Text('Messages'),
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Message()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Message()));
                   },
                 ),
                 const Divider(

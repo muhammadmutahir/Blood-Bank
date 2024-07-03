@@ -57,16 +57,16 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back,
               color: whiteColor,
             )),
-        title: Text('Find Donor',
+        title: const Text('Find Donor',
             style: TextStyle(
                 fontSize: 18, fontWeight: FontWeight.bold, color: whiteColor)),
         backgroundColor: appBannarColor,
         toolbarHeight: 84,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(40),
                 bottomRight: Radius.circular(40))),
@@ -76,9 +76,9 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.only(
+          const SizedBox(height: 15),
+          const Padding(
+            padding: EdgeInsets.only(
               left: 20,
             ),
             child: Text(
@@ -175,11 +175,11 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
+          const Padding(
+            padding: EdgeInsets.only(left: 20),
             child: Text(
               'Select City:',
               style: TextStyle(
@@ -188,33 +188,9 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
-          // Container(
-          //   margin: EdgeInsets.only(left: 45),
-          //   padding: const EdgeInsets.all(5),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(width: 1),
-          //     borderRadius: BorderRadius.circular(10),
-          //   ),
-          //   child: DropdownButton<String>(
-          //     underline: Container(),
-          //     value: city.first,
-          //     onChanged: (String? value) => _dropDownButtonOnTap(value),
-          //     items: city.map<DropdownMenuItem<String>>((String value) {
-          //       return DropdownMenuItem<String>(
-          //         value: value,
-          //         child: Padding(
-          //           padding: const EdgeInsets.only(left: 45),
-          //           child: Text(value),
-          //         ),
-          //       );
-          //     }).toList(),
-          //   ),
-          // ),
-          // Visibility(visible: isCitySelected, child: Text(selectedCity)),
-
           Padding(
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: Container(
@@ -264,10 +240,10 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
                           ),
                         );
                       },
-                    ).toList(),
+                    ),
                   ],
-                  icon: Icon(Icons.arrow_drop_down, color: Colors.black),
-                  decoration: InputDecoration(
+                  icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 10),
                     fillColor: Colors.transparent,
@@ -277,8 +253,7 @@ class _FindDonorRequestState extends State<FindDonorRequest> {
               ),
             ),
           ),
-
-          SizedBox(
+          const SizedBox(
             height: 60,
           ),
           Center(
@@ -338,8 +313,8 @@ Widget button(String text, VoidCallback onPressed) {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(width: 20),
-          Icon(Icons.arrow_forward, color: Colors.white),
+          const SizedBox(width: 20),
+          const Icon(Icons.arrow_forward, color: Colors.white),
         ],
       ),
     ),

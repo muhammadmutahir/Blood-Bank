@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SelectCityButton extends StatefulWidget {
-  const SelectCityButton({Key? key}) : super(key: key);
+  const SelectCityButton({super.key});
 
   @override
   _SelectCityButtonState createState() => _SelectCityButtonState();
@@ -32,11 +32,11 @@ class _SelectCityButtonState extends State<SelectCityButton> {
           _showCitySelectionDialog(context);
         },
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+          foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
         ),
         child: Text(
           selectedCity,
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
         ),
       ),
     );
@@ -47,8 +47,8 @@ class _SelectCityButtonState extends State<SelectCityButton> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Select a City"),
-          content: Container(
+          title: const Text("Select a City"),
+          content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,

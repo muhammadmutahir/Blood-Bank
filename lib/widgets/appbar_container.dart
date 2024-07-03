@@ -15,7 +15,7 @@ class AppBarContainer extends StatelessWidget {
           Container(
             height: 245,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: appBannarColor,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(60),
@@ -27,7 +27,7 @@ class AppBarContainer extends StatelessWidget {
             top: 50,
             left: 5,
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 color: Colors.white,
               ),

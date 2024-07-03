@@ -11,7 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SeekerRegister extends StatefulWidget {
-  const SeekerRegister({Key? key});
+  const SeekerRegister({super.key, Key});
 
   static const String id = 'SeekerRegister';
 
@@ -27,7 +27,7 @@ class _SeekerRegisterState extends State<SeekerRegister> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -67,17 +67,17 @@ class _SeekerRegisterState extends State<SeekerRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffEE4141),
+        backgroundColor: const Color(0xffEE4141),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: whiteColor,
           ),
         ),
-        title: Text(
+        title: const Text(
           'Seeker Register',
           style: TextStyle(fontWeight: FontWeight.bold, color: whiteColor),
         ),
@@ -195,8 +195,9 @@ class _SeekerRegisterState extends State<SeekerRegister> {
                                 focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: whiteColor),
                                 ),
-                                errorStyle: TextStyle(color: Colors.yellow),
-                                errorBorder: UnderlineInputBorder(
+                                errorStyle:
+                                    const TextStyle(color: Colors.yellow),
+                                errorBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.yellow),
                                 )),
                             validator: validatePassword,
@@ -239,7 +240,7 @@ class _SeekerRegisterState extends State<SeekerRegister> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      HomePage()));
+                                                      const HomePage()));
                                           setState(() {
                                             loading = false;
                                           });

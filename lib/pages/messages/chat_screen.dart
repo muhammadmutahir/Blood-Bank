@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/components/uid_generator.dart';
 import 'package:blood_bank/models/blood_bank_user_model.dart';
@@ -186,7 +184,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     )
                   ],
@@ -301,7 +299,7 @@ class MessageBubble extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: isSender
-                ? Color.fromARGB(255, 208, 202, 202)
+                ? const Color.fromARGB(255, 208, 202, 202)
                 : const Color.fromARGB(255, 232, 177, 182),
             borderRadius: BorderRadius.circular(8),
           ),

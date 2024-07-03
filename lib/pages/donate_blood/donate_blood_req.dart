@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class DonateBloodReq extends StatefulWidget {
   static const String id = "DonateBloodReq";
-  const DonateBloodReq({Key? key}) : super(key: key);
+  const DonateBloodReq({super.key});
 
   @override
   State<DonateBloodReq> createState() => _DonateBloodReqState();

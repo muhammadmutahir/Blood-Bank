@@ -184,7 +184,7 @@ class _ChatPageState extends State<ChatPage> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     )
                   ],
@@ -292,14 +292,13 @@ class MessageBubble extends StatelessWidget {
       child: Align(
         alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
-          //hkshdkfd..........................
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.70,
           ),
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             color: isSender
-                ? Color.fromARGB(255, 208, 202, 202)
+                ? const Color.fromARGB(255, 208, 202, 202)
                 : const Color.fromARGB(255, 232, 177, 182),
             borderRadius: BorderRadius.circular(8),
           ),

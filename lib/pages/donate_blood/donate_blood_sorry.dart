@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class DonateBloodSorry extends StatefulWidget {
   static const String id = "DonateBloodSorry";
-  const DonateBloodSorry({Key? key}) : super(key: key);
+  const DonateBloodSorry({super.key});
 
   @override
   State<DonateBloodSorry> createState() => _DonateBloodSorryState();
@@ -26,6 +26,21 @@ class _DonateBloodSorryState extends State<DonateBloodSorry> {
                 child: Container(
                   height: 520,
                   width: 360,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 139, 128, 128),
+                        offset: Offset(
+                          5.0,
+                          5.0,
+                        ),
+                        blurRadius: 10.0,
+                        spreadRadius: 2.0,
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       SizedBox(
@@ -55,21 +70,6 @@ class _DonateBloodSorryState extends State<DonateBloodSorry> {
                       }),
                     ],
                   ),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color.fromARGB(255, 139, 128, 128),
-                        offset: Offset(
-                          5.0,
-                          5.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
-                      )
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -93,8 +93,8 @@ Widget button(String text, VoidCallback onPressed) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.arrow_back, color: Colors.white),
-          SizedBox(width: 20),
+          const Icon(Icons.arrow_back, color: Colors.white),
+          const SizedBox(width: 20),
           Text(
             text,
             textAlign: TextAlign.center,

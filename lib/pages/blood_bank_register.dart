@@ -10,7 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BloodBankRegister extends StatefulWidget {
-  const BloodBankRegister({Key? key});
+  const BloodBankRegister({super.key, Key});
 
   @override
   State<BloodBankRegister> createState() => _BloodBankRegisterState();
@@ -30,7 +30,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController cityController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<String> cities = [
     "Lahore",
@@ -120,17 +120,17 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffEE4141),
+        backgroundColor: const Color(0xffEE4141),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: whiteColor,
           ),
         ),
-        title: Text(
+        title: const Text(
           'Blood Bank Register',
           style: TextStyle(fontWeight: FontWeight.bold, color: whiteColor),
         ),
@@ -267,7 +267,8 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                             if (!value.startsWith('+92')) {
                               contactnoController.value = TextEditingValue(
                                 text: '+92$value',
-                                selection: TextSelection.collapsed(offset: 4),
+                                selection:
+                                    const TextSelection.collapsed(offset: 4),
                               );
                             }
                           },
@@ -306,8 +307,8 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                               focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: whiteColor),
                               ),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
+                              errorStyle: const TextStyle(color: Colors.yellow),
+                              errorBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.yellow),
                               )),
                           validator: validatePassword,
@@ -316,9 +317,9 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, right: 210, bottom: 10),
+                      const Padding(
+                        padding:
+                            EdgeInsets.only(top: 10, right: 210, bottom: 10),
                         child: Text(
                           'Select Blood Type:',
                           style: TextStyle(color: whiteColor),
@@ -342,7 +343,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                                 });
                               },
                               items: [
-                                DropdownMenuItem<String>(
+                                const DropdownMenuItem<String>(
                                   value: "Select Blood Type",
                                   child: Center(
                                     child: Text(
@@ -359,17 +360,17 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                                       value: value,
                                       child: Text(
                                         value,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Color(0xffFF0E0E),
                                         ),
                                       ),
                                     );
                                   },
-                                ).toList(),
+                                ),
                               ],
-                              icon: Icon(Icons.arrow_drop_down,
+                              icon: const Icon(Icons.arrow_drop_down,
                                   color: Color(0xffFF0E0E)),
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),
@@ -383,9 +384,9 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, right: 210, bottom: 10),
+                      const Padding(
+                        padding:
+                            EdgeInsets.only(top: 10, right: 210, bottom: 10),
                         child: Text(
                           'Select City:',
                           style: TextStyle(color: whiteColor),
@@ -411,7 +412,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                               },
 
                               items: [
-                                DropdownMenuItem<String>(
+                                const DropdownMenuItem<String>(
                                   value: "--Select City--",
                                   child: Center(
                                     child: Center(
@@ -430,17 +431,17 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                                       value: value.toLowerCase(),
                                       child: Text(
                                         value,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Color(0xffFF0E0E),
                                         ),
                                       ),
                                     );
                                   },
-                                ).toList(),
+                                ),
                               ],
-                              icon: Icon(Icons.arrow_drop_down,
+                              icon: const Icon(Icons.arrow_drop_down,
                                   color: Color(0xffFF0E0E)),
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),
@@ -492,7 +493,7 @@ class _BloodBankRegisterState extends State<BloodBankRegister> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  HomePage()));
+                                                  const HomePage()));
 
                                       setState(() {
                                         loading = false;

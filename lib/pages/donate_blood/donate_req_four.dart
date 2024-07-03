@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class DonateReqFour extends StatefulWidget {
   static const String id = "DonateReqFour";
-  const DonateReqFour({Key? key}) : super(key: key);
+  const DonateReqFour({super.key});
 
   @override
   State<DonateReqFour> createState() => _DonateReqFourState();
@@ -26,6 +26,21 @@ class _DonateReqFourState extends State<DonateReqFour> {
                 child: Container(
                   height: 520,
                   width: 360,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 139, 128, 128),
+                        offset: Offset(
+                          5.0,
+                          5.0,
+                        ),
+                        blurRadius: 10.0,
+                        spreadRadius: 2.0,
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       SizedBox(
@@ -69,21 +84,6 @@ class _DonateReqFourState extends State<DonateReqFour> {
                                     builder: (context) => DonateReqFive()));
                           })
                         ],
-                      )
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color.fromARGB(255, 139, 128, 128),
-                        offset: Offset(
-                          5.0,
-                          5.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
                       )
                     ],
                   ),

@@ -6,7 +6,7 @@ class MessageModel {
   final String reciverid;
   //final String time;
   final String message;
-  final Timestamp timestamp; // <-- Added this field
+  final Timestamp timestamp;
 
   MessageModel({
     required this.mesgid,
@@ -14,7 +14,7 @@ class MessageModel {
     required this.reciverid,
     //required this.time,
     required this.message,
-    required this.timestamp, // <-- Added this parameter
+    required this.timestamp, //
   });
 
   Map<String, dynamic> toJson() => {
@@ -23,7 +23,7 @@ class MessageModel {
         'reciverid': reciverid,
         // 'time': time,
         'message': message,
-        'timestamp': timestamp, // <-- Added this field
+        'timestamp': timestamp, //
       };
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class MessageModel {
       timestamp: json['timestamp'] != null
           ? Timestamp.fromMillisecondsSinceEpoch(
               json['timestamp'].millisecondsSinceEpoch)
-          : Timestamp.now(), // <-- Updated this line
+          : Timestamp.now(), //
     );
   }
 }

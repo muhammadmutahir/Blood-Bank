@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class DonateReqFive extends StatefulWidget {
   static const String id = "DonateReqFive";
-  const DonateReqFive({Key? key}) : super(key: key);
+  const DonateReqFive({super.key});
 
   @override
   State<DonateReqFive> createState() => _DonateReqFiveState();
@@ -26,6 +26,21 @@ class _DonateReqFiveState extends State<DonateReqFive> {
                 child: Container(
                   height: 520,
                   width: 360,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 139, 128, 128),
+                        offset: Offset(
+                          5.0,
+                          5.0,
+                        ),
+                        blurRadius: 10.0,
+                        spreadRadius: 2.0,
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       SizedBox(
@@ -34,7 +49,8 @@ class _DonateReqFiveState extends State<DonateReqFive> {
                       Image(
                           height: 160,
                           width: 160,
-                          image: AssetImage('assets/images/blood-donation.png')),
+                          image:
+                              AssetImage('assets/images/blood-donation.png')),
                       SizedBox(
                         height: 40,
                       ),
@@ -69,21 +85,6 @@ class _DonateReqFiveState extends State<DonateReqFive> {
                                     builder: (context) => DonateBloodGreat()));
                           })
                         ],
-                      )
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color.fromARGB(255, 139, 128, 128),
-                        offset: Offset(
-                          5.0,
-                          5.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
                       )
                     ],
                   ),

@@ -6,11 +6,11 @@ class SelectGenderTypeButton extends StatelessWidget {
   final bool isClicked;
 
   const SelectGenderTypeButton({
-    Key? key,
+    super.key,
     required this.genderType,
     required this.onPressed,
     required this.isClicked,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,8 @@ class SelectGenderTypeButton extends StatelessWidget {
       child: Container(
         height: 40,
         width: 130,
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(9),
           border: Border.all(

@@ -24,7 +24,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   UserModel? userModel;
   Uint8List? image;
@@ -121,17 +121,17 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffEE4141),
+        backgroundColor: const Color(0xffEE4141),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: whiteColor,
           ),
         ),
-        title: Text(
+        title: const Text(
           'Update Profile',
           style: TextStyle(fontWeight: FontWeight.bold, color: whiteColor),
         ),
@@ -154,7 +154,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Center(
@@ -246,7 +246,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(),
+                                  builder: (context) => const HomePage(),
                                 ),
                               );
                             }

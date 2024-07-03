@@ -68,8 +68,8 @@ class AvailableDonor extends StatelessWidget {
                     width: 150,
                     height: 150,
                   ),
-                  SizedBox(height: 16),
-                  Text(
+                  const SizedBox(height: 16),
+                  const Text(
                     'No data found',
                     style: TextStyle(
                       fontSize: 20,
@@ -82,7 +82,7 @@ class AvailableDonor extends StatelessWidget {
             );
           } else {
             return ListView(
-              children: users!.map((user) => buildUser(context, user)).toList(),
+              children: users.map((user) => buildUser(context, user)).toList(),
             );
           }
         },
@@ -91,11 +91,11 @@ class AvailableDonor extends StatelessWidget {
   }
 
   Widget buildUser(BuildContext context, DonorUserModel user) => ListTile(
-        leading: CircleAvatar(
+        leading: const CircleAvatar(
           backgroundImage: AssetImage('assets/images/cough.png'),
         ),
         title: Padding(
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             vertical: 8,
             horizontal: 16,
           ),
@@ -108,7 +108,7 @@ class AvailableDonor extends StatelessWidget {
                     Expanded(
                       child: Text(
                         user.fullname,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -116,7 +116,7 @@ class AvailableDonor extends StatelessWidget {
                     Container(
                       height: 40,
                       width: 42,
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(7),
@@ -124,7 +124,7 @@ class AvailableDonor extends StatelessWidget {
                       child: Center(
                         child: Text(
                           user.bloodgroup,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                           ),
                         ),
@@ -137,7 +137,7 @@ class AvailableDonor extends StatelessWidget {
                     onPressed: () {
                       _showDetailsBottomSheet(context, user);
                     },
-                    child: Text(
+                    child: const Text(
                       'View Details',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
@@ -188,7 +188,7 @@ class AvailableDonor extends StatelessWidget {
               child: Text(
                 donorUserModel.fullname,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
@@ -199,19 +199,19 @@ class AvailableDonor extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Blood Group: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 100,
                   ),
                   Container(
                     height: 40,
                     width: 42,
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(7),
@@ -219,7 +219,7 @@ class AvailableDonor extends StatelessWidget {
                     child: Center(
                       child: Text(
                         donorUserModel.bloodgroup,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -229,7 +229,7 @@ class AvailableDonor extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -241,13 +241,13 @@ class AvailableDonor extends StatelessWidget {
                     onPressed: () {
                       callcontactno(donorUserModel.contactno);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.phone,
                       color: whiteColor,
                     ),
                     label: Text(
                       donorUserModel.contactno,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -267,11 +267,11 @@ class AvailableDonor extends StatelessWidget {
                                   bloodBankUserModel: null,
                                   donorUserModel: donorUserModel)));
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.message,
                       color: whiteColor,
                     ),
-                    label: Text(
+                    label: const Text(
                       'Message',
                       style: TextStyle(
                         color: Colors.white,

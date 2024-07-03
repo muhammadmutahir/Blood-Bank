@@ -25,15 +25,3 @@ class _getCurrentUserState extends State<getCurrentUser> {
     return const Placeholder();
   }
 }
-
-// Future<void> getCurrentUser() async {
-//     User? user = _auth.currentUser;
-
-//     if (widget.seekerUserModel != null) {
-//       name = widget.seekerUserModel!.fullname;
-//     } else if (widget.donorUserModel != null) {
-//       name = widget.donorUserModel!.fullname;
-//     } else {
-//       name = widget.bloodBankUserModel!.bloodbankname;
-//     }
-//   }

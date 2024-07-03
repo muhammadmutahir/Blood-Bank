@@ -37,7 +37,7 @@ class _DonorRegisterState extends State<DonorRegister> {
   TextEditingController contactnoController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<String> cities = [
     "Lahore",
@@ -272,7 +272,8 @@ class _DonorRegisterState extends State<DonorRegister> {
                             if (!value.startsWith('+92')) {
                               contactnoController.value = TextEditingValue(
                                 text: '+92$value',
-                                selection: TextSelection.collapsed(offset: 4),
+                                selection:
+                                    const TextSelection.collapsed(offset: 4),
                               );
                             }
                           },
@@ -321,9 +322,9 @@ class _DonorRegisterState extends State<DonorRegister> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, right: 210, bottom: 10),
+                      const Padding(
+                        padding:
+                            EdgeInsets.only(top: 10, right: 210, bottom: 10),
                         child: Text(
                           'Select Blood Type:',
                           style: TextStyle(color: whiteColor),
@@ -347,7 +348,7 @@ class _DonorRegisterState extends State<DonorRegister> {
                                 });
                               },
                               items: [
-                                DropdownMenuItem<String>(
+                                const DropdownMenuItem<String>(
                                   value: "Select Blood Type",
                                   child: Center(
                                     child: Text(
@@ -364,17 +365,17 @@ class _DonorRegisterState extends State<DonorRegister> {
                                       value: value,
                                       child: Text(
                                         value,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Color(0xffFF0E0E),
                                         ),
                                       ),
                                     );
                                   },
-                                ).toList(),
+                                ),
                               ],
-                              icon: Icon(Icons.arrow_drop_down,
+                              icon: const Icon(Icons.arrow_drop_down,
                                   color: Color(0xffFF0E0E)),
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),
@@ -385,12 +386,12 @@ class _DonorRegisterState extends State<DonorRegister> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, right: 210, bottom: 10),
+                      const Padding(
+                        padding:
+                            EdgeInsets.only(top: 10, right: 210, bottom: 10),
                         child: Text(
                           'Select City:',
                           style: TextStyle(color: whiteColor),
@@ -416,7 +417,7 @@ class _DonorRegisterState extends State<DonorRegister> {
                               },
 
                               items: [
-                                DropdownMenuItem<String>(
+                                const DropdownMenuItem<String>(
                                   value: "--Select City--",
                                   child: Center(
                                     child: Text(
@@ -433,17 +434,17 @@ class _DonorRegisterState extends State<DonorRegister> {
                                       value: value.toLowerCase(),
                                       child: Text(
                                         value,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Color(0xffFF0E0E),
                                         ),
                                       ),
                                     );
                                   },
-                                ).toList(),
+                                ),
                               ],
-                              icon: Icon(Icons.arrow_drop_down,
+                              icon: const Icon(Icons.arrow_drop_down,
                                   color: Color(0xffFF0E0E)),
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 contentPadding:
                                     EdgeInsets.symmetric(horizontal: 10),

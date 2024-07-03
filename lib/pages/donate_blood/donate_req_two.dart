@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class DonateReqTwo extends StatefulWidget {
   static const String id = "DonateReqTwo";
-  const DonateReqTwo({Key? key}) : super(key: key);
+  const DonateReqTwo({super.key});
 
   @override
   State<DonateReqTwo> createState() => _DonateReqTwoState();
@@ -26,6 +26,21 @@ class _DonateReqTwoState extends State<DonateReqTwo> {
                 child: Container(
                   height: 520,
                   width: 360,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 139, 128, 128),
+                        offset: Offset(
+                          5.0,
+                          5.0,
+                        ),
+                        blurRadius: 10.0,
+                        spreadRadius: 2.0,
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       SizedBox(
@@ -34,7 +49,8 @@ class _DonateReqTwoState extends State<DonateReqTwo> {
                       Image(
                           height: 160,
                           width: 160,
-                          image: AssetImage('assets/images/weighing-machine.png')),
+                          image:
+                              AssetImage('assets/images/weighing-machine.png')),
                       SizedBox(
                         height: 40,
                       ),
@@ -69,21 +85,6 @@ class _DonateReqTwoState extends State<DonateReqTwo> {
                                     builder: (context) => DonateBloodSorry()));
                           })
                         ],
-                      )
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color.fromARGB(255, 139, 128, 128),
-                        offset: Offset(
-                          5.0,
-                          5.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
                       )
                     ],
                   ),

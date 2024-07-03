@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class DonateBloodGreat extends StatefulWidget {
   static const String id = "DonateBloodGreat";
-  const DonateBloodGreat({Key? key}) : super(key: key);
+  const DonateBloodGreat({super.key});
 
   @override
   State<DonateBloodGreat> createState() => _DonateBloodGreatState();
@@ -25,6 +25,21 @@ class _DonateBloodGreatState extends State<DonateBloodGreat> {
                 child: Container(
                   height: 520,
                   width: 360,
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 139, 128, 128),
+                        offset: Offset(
+                          5.0,
+                          5.0,
+                        ),
+                        blurRadius: 10.0,
+                        spreadRadius: 2.0,
+                      )
+                    ],
+                  ),
                   child: Column(
                     children: [
                       Image(
@@ -51,21 +66,6 @@ class _DonateBloodGreatState extends State<DonateBloodGreat> {
                             MaterialPageRoute(
                                 builder: (context) => DonorRegister()));
                       }),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(40),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Color.fromARGB(255, 139, 128, 128),
-                        offset: Offset(
-                          5.0,
-                          5.0,
-                        ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
-                      )
                     ],
                   ),
                 ),
@@ -100,8 +100,8 @@ Widget button(String text, VoidCallback onPressed) {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(width: 20),
-          Icon(Icons.arrow_forward, color: Colors.white),
+          const SizedBox(width: 20),
+          const Icon(Icons.arrow_forward, color: Colors.white),
         ],
       ),
     ),

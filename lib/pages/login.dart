@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -114,8 +114,8 @@ class _LoginState extends State<Login> {
                                   borderSide: const BorderSide(
                                       color: Color(0xffE4E7EB)),
                                   borderRadius: BorderRadius.circular(18)),
-                              errorStyle: TextStyle(color: Colors.yellow),
-                              errorBorder: UnderlineInputBorder(
+                              errorStyle: const TextStyle(color: Colors.yellow),
+                              errorBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.yellow),
                               ),
                             ),
@@ -164,8 +164,8 @@ class _LoginState extends State<Login> {
                               const BorderSide(color: Color(0xffE4E7EB)),
                           borderRadius: BorderRadius.circular(18),
                         ),
-                        errorStyle: TextStyle(color: Colors.yellow),
-                        errorBorder: UnderlineInputBorder(
+                        errorStyle: const TextStyle(color: Colors.yellow),
+                        errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.yellow),
                         )),
                     validator: validatePassword,
@@ -181,7 +181,8 @@ class _LoginState extends State<Login> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgotPasswordScreen()));
+                              builder: (context) =>
+                                  const ForgotPasswordScreen()));
                     },
                     child: const Center(
                       child: Text(
@@ -217,7 +218,7 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()));
+                                    builder: (context) => const HomePage()));
                             setState(() {
                               loading = false;
                             });
@@ -251,7 +252,7 @@ class _LoginState extends State<Login> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text(
+                                  title: const Text(
                                     'Register as a',
                                     style: TextStyle(
                                         fontSize: 22,
@@ -267,23 +268,23 @@ class _LoginState extends State<Login> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    SeekerRegister()));
+                                                    const SeekerRegister()));
                                       }),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: 10),
                                       button('Donor', () {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DonateBloodReq()));
+                                                    const DonateBloodReq()));
                                       }),
-                                      SizedBox(height: 10),
+                                      const SizedBox(height: 10),
                                       button('Blood Bank', () {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    BloodBankRegister()));
+                                                    const BloodBankRegister()));
                                       }),
                                     ],
                                   ),

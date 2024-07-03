@@ -1,4 +1,3 @@
-
 import 'package:blood_bank/components/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -7,11 +6,11 @@ class RedRoundButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool loading;
   const RedRoundButton({
-    Key? key,
+    super.key,
     required this.title,
     required this.onTap,
     this.loading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +26,18 @@ class RedRoundButton extends StatelessWidget {
         ),
         child: Center(
           child: loading
-              ? CircularProgressIndicator(strokeWidth: 3,color: Colors.white,)
+              ? const CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white,
+                )
               : Text(
-            title,
-            style: TextStyle(
-              color: whiteColor,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+                  title,
+                  style: const TextStyle(
+                    color: whiteColor,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
         ),
       ),
     );
