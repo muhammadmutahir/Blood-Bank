@@ -2,10 +2,12 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/home_page.dart';
+import 'package:blood_bank/home_page/image_picker.dart';
 import 'package:blood_bank/models/user_model.dart';
 import 'package:blood_bank/utils/utils.dart';
 import 'package:blood_bank/widgets/whiteroundbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,6 +30,8 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   UserModel? userModel;
   Uint8List? image;
+  PlatformFile? _profilePlatformFile;
+  String? _imageLink;
 
   @override
   void initState() {
@@ -64,6 +68,7 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
 
   Future<void> _updateUserProfile() async {
     if (userModel!.userType == "seeker") {
+      uploadImageToFirebase(context);
       await _firebaseFirestore.collection("users").doc(userModel!.id).update({
         'name': fullnameController.text,
       });
@@ -97,23 +102,11 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
     }
   }
 
-  void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      image = img;
-    });
-    uploadImageToFirebase(context);
-  }
-
   Future<void> uploadImageToFirebase(BuildContext context) async {
-    final Uint8List file = image!;
-    final ref =
-        FirebaseStorage.instance.ref().child('profileImages/${userModel!.id}');
-    final uploadTask = ref.putData(file);
-    final snapshot = await uploadTask.whenComplete(() {});
-    final downloadUrl = await snapshot.ref.getDownloadURL();
+    String? profilePicture =
+        await utils.uploadFile(_profilePlatformFile, "profile");
     await _firebaseFirestore.collection("users").doc(userModel!.id).update({
-      'profileImage': downloadUrl,
+      'profileImage': profilePicture,
     });
   }
 
@@ -160,21 +153,19 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
                 Center(
                   child: Stack(
                     children: [
-                      image != null
-                          ? CircleAvatar(
-                              radius: 64,
-                              backgroundImage: MemoryImage(image!),
-                            )
-                          : const CircleAvatar(
-                              radius: 64,
-                              backgroundImage: NetworkImage(
-                                  'https://www.pngitem.com/pimgs/m/421-4212266_transparent-default-avatar-png-default-avatar-images-png.png'),
-                            ),
+                      ImagePickerBigWidget(
+                        heading: '',
+                        description:
+                            'add a close-up image of yourself max size is 2 MB',
+                        onPressed: () async => _selectProfileImage(),
+                        platformFile: _profilePlatformFile,
+                        imgUrl: _imageLink,
+                      ),
                       Positioned(
                         top: 90,
                         left: 80,
                         child: IconButton(
-                          onPressed: selectImage,
+                          onPressed: () => _selectProfileImage(),
                           icon: const Icon(Icons.add_a_photo),
                         ),
                       ),
@@ -262,5 +253,21 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
         ),
       ),
     );
+  }
+
+  Future<void> _selectProfileImage() async {
+    try {
+      _profilePlatformFile = await utils.selectFile();
+      if (_profilePlatformFile != null) {
+        log("Big Image Clicked");
+        log(_profilePlatformFile!.name);
+      } else {
+        log("no file selected");
+        return;
+      }
+      setState(() {});
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

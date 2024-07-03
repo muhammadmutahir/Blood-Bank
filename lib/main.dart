@@ -6,10 +6,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: const FirebaseOptions(
-          apiKey: 'AIzaSyC_mkmL6NvhFA41kQSLgZh1NFg9yYnaHMw',
-          appId: '1:375745278835:android:36d21eed3d04528d340b06',
-          messagingSenderId: '375745278835',
-          projectId: 'blood-bank-d9f7a'));
+    apiKey: 'AIzaSyC_mkmL6NvhFA41kQSLgZh1NFg9yYnaHMw',
+    appId: '1:375745278835:android:36d21eed3d04528d340b06',
+    messagingSenderId: '375745278835',
+    projectId: 'blood-bank-d9f7a',
+    storageBucket: 'profile-images.appspot.com',
+  ));
   runApp(const MyApp());
 }
 
