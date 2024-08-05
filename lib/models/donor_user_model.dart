@@ -7,17 +7,18 @@ class DonorUserModel {
   final String city;
   final String contactno;
   final String password;
+  final String? imageUrl;
 
-  DonorUserModel({
-    this.id = '',
-    required this.fullname,
-    required this.email,
-    required this.age,
-    required this.bloodgroup,
-    required this.city,
-    required this.contactno,
-    required this.password,
-  });
+  DonorUserModel(
+      {this.id = '',
+      required this.fullname,
+      required this.email,
+      required this.age,
+      required this.bloodgroup,
+      required this.city,
+      required this.contactno,
+      required this.password,
+      required this.imageUrl});
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -28,6 +29,7 @@ class DonorUserModel {
         'city': city,
         'contactno': contactno,
         'password': password,
+        'imageUrl': imageUrl,
       };
 
   factory DonorUserModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ class DonorUserModel {
       city: json['city'] ?? '',
       contactno: json['contactno'] ?? '',
       password: json['password'] ?? '',
+      imageUrl: json['imageUrl'],
     );
   }
 }

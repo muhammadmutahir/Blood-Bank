@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/home_page.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UpdateProfileSeeker extends StatefulWidget {
   const UpdateProfileSeeker({super.key});
@@ -32,7 +34,9 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
   Uint8List? image;
   PlatformFile? _profilePlatformFile;
   String? _imageLink;
-
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   @override
   void initState() {
     super.initState();
@@ -53,6 +57,32 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
     return null;
   }
 
+  Future<void> _pickImage() async {
+    final status = await Permission.storage.request();
+    if (status.isGranted) {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        _image = pickedFile != null ? File(pickedFile.path) : null;
+      });
+    } else {
+      // Handle permission denied
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_image == null) return;
+
+    try {
+      final ref = _storage.ref().child('uploads/${DateTime.now().toString()}');
+      await ref.putFile(_image!);
+      final downloadUrl = await ref.getDownloadURL();
+      log(downloadUrl);
+      // Handle the download URL as needed
+    } catch (e) {
+      // Handle errors
+    }
+  }
+
   Future<void> _getCurrentUser() async {
     User? user = _auth.currentUser;
     if (user != null) {
@@ -68,7 +98,8 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
 
   Future<void> _updateUserProfile() async {
     if (userModel!.userType == "seeker") {
-      uploadImageToFirebase(context);
+      // uploadImageToFirebase(context);
+      _uploadImage();
       await _firebaseFirestore.collection("users").doc(userModel!.id).update({
         'name': fullnameController.text,
       });
@@ -153,19 +184,22 @@ class _UpdateProfileSeekerState extends State<UpdateProfileSeeker> {
                 Center(
                   child: Stack(
                     children: [
-                      ImagePickerBigWidget(
-                        heading: '',
-                        description:
-                            'add a close-up image of yourself max size is 2 MB',
-                        onPressed: () async => _selectProfileImage(),
-                        platformFile: _profilePlatformFile,
-                        imgUrl: _imageLink,
+                      GestureDetector(
+                        onTap: () => _pickImage(),
+                        child: _image?.path != null
+                            ? CircleAvatar(
+                                child: Image.file(_image!),
+                                radius: 64,
+                              )
+                            : CircleAvatar(
+                                child: Image.asset("assets/images/avatar.jpg"),
+                              ),
                       ),
                       Positioned(
                         top: 90,
                         left: 80,
                         child: IconButton(
-                          onPressed: () => _selectProfileImage(),
+                          onPressed: () => _pickImage(),
                           icon: const Icon(Icons.add_a_photo),
                         ),
                       ),

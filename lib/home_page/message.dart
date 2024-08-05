@@ -20,7 +20,8 @@ class Message extends StatefulWidget {
 class _MessageState extends State<Message> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   List<MessageModel> messageModelList = [];
-  List<String> userNameList = [];
+  List<Map<String, String>> userDetailList = [];
+
   @override
   void initState() {
     super.initState();
@@ -65,22 +66,24 @@ class _MessageState extends State<Message> {
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               title: Text(
-                userNameList[index],
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                '${userDetailList[index]["name"]}\n${userDetailList[index]["email"]}',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               subtitle: Text(
                 messageModelList[index].message,
                 style: const TextStyle(fontSize: 14),
               ),
               onTap: () async {
-                /// Added onTap callback
                 String otherUserId = messageModelList[index].senderid ==
                         FirebaseAuth.instance.currentUser!.uid
                     ? messageModelList[index].reciverid
                     : messageModelList[index].senderid;
                 BloodBankUserModel? bloodBankUserModel;
                 DonorUserModel? donorUserModel;
+                SeekerUserModel? seekerUserModel;
                 if (otherUserId.startsWith('donor')) {
                   final value = await firebaseFirestore
                       .collection('donordetails')
@@ -103,6 +106,7 @@ class _MessageState extends State<Message> {
                     builder: (context) => ChatScreen(
                       bloodBankUserModel: bloodBankUserModel,
                       donorUserModel: donorUserModel,
+                      seekerUserModel: seekerUserModel,
                     ),
                   ),
                 );
@@ -139,19 +143,20 @@ class _MessageState extends State<Message> {
     }
 
     messageModelList = latestMessages.values.toList();
-    userNameList = await Future.wait(latestMessages.keys.map((userId) async {
-      return getUserModel(userId);
+    userDetailList = await Future.wait(latestMessages.keys.map((userId) async {
+      return await getUserModel(userId);
     }));
 
     setState(() {});
   }
 
-  Future<String> getUserModel(String userId) async {
+  Future<Map<String, String>> getUserModel(String userId) async {
     if (userId.startsWith('donor')) {
       final value =
           await firebaseFirestore.collection('donordetails').doc(userId).get();
       final data = value.data();
-      return DonorUserModel.fromJson(data!).fullname;
+      final donor = DonorUserModel.fromJson(data!);
+      return {"name": donor.fullname, "email": donor.email};
     } else {
       final value =
           await firebaseFirestore.collection('users').doc(userId).get();
@@ -163,21 +168,24 @@ class _MessageState extends State<Message> {
             .doc(userId)
             .get();
         final seekerData = seekerValue.data();
-        return SeekerUserModel.fromJson(seekerData!).fullname;
+        final seeker = SeekerUserModel.fromJson(seekerData!);
+        return {"name": seeker.fullname, "email": seeker.email};
       } else if (user.userType == 'donor') {
         final donorValue = await firebaseFirestore
             .collection('donordetails')
             .doc(userId)
             .get();
         final donorData = donorValue.data();
-        return DonorUserModel.fromJson(donorData!).fullname;
+        final donor = DonorUserModel.fromJson(donorData!);
+        return {"name": donor.fullname, "email": donor.email};
       } else {
         final bloodBankValue = await firebaseFirestore
             .collection('bloodbankdetails')
             .doc(userId)
             .get();
         final bloodBankData = bloodBankValue.data();
-        return BloodBankUserModel.fromJson(bloodBankData!).bloodbankname;
+        final bloodBank = BloodBankUserModel.fromJson(bloodBankData!);
+        return {"name": bloodBank.bloodbankname, "email": bloodBank.email};
       }
     }
   }

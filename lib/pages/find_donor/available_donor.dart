@@ -1,5 +1,6 @@
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/models/donor_user_model.dart';
+import 'package:blood_bank/pages/find_donor/donor_imagescreen.dart';
 import 'package:blood_bank/pages/messages/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -174,6 +175,125 @@ class AvailableDonor extends StatelessWidget {
           )
           .toList());
 
+  // void _showDetailsBottomSheet(
+  //     BuildContext context, DonorUserModel donorUserModel) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Column(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: Text(
+  //               donorUserModel.fullname,
+  //               textAlign: TextAlign.center,
+  //               style: const TextStyle(
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 20,
+  //               ),
+  //             ),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 const Text(
+  //                   'Blood Group: ',
+  //                   style: TextStyle(
+  //                     fontWeight: FontWeight.bold,
+  //                   ),
+  //                 ),
+  //                 const SizedBox(
+  //                   width: 100,
+  //                 ),
+  //                 Container(
+  //                   height: 40,
+  //                   width: 42,
+  //                   padding: const EdgeInsets.all(5),
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.red,
+  //                     borderRadius: BorderRadius.circular(7),
+  //                   ),
+  //                   child: Center(
+  //                     child: Text(
+  //                       donorUserModel.bloodgroup,
+  //                       style: const TextStyle(
+  //                         fontWeight: FontWeight.bold,
+  //                         color: Colors.white,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           const SizedBox(
+  //             height: 20,
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.all(8.0),
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 ElevatedButton.icon(
+  //                   onPressed: () {
+  //                     callcontactno(donorUserModel.contactno);
+  //                   },
+  //                   icon: const Icon(
+  //                     Icons.phone,
+  //                     color: whiteColor,
+  //                   ),
+  //                   label: Text(
+  //                     donorUserModel.contactno,
+  //                     style: const TextStyle(
+  //                       color: Colors.white,
+  //                     ),
+  //                   ),
+  //                   style: ElevatedButton.styleFrom(
+  //                     backgroundColor: Colors.red,
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(7.0),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 ElevatedButton.icon(
+  //                   onPressed: () {
+  //                     Navigator.push(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                             builder: (context) => ChatScreen(
+  //                                 bloodBankUserModel: null,
+  //                                 donorUserModel: donorUserModel)));
+  //                   },
+  //                   icon: const Icon(
+  //                     Icons.message,
+  //                     color: whiteColor,
+  //                   ),
+  //                   label: const Text(
+  //                     'Message',
+  //                     style: TextStyle(
+  //                       color: Colors.white,
+  //                     ),
+  //                   ),
+  //                   style: ElevatedButton.styleFrom(
+  //                     backgroundColor: Colors.red,
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(7.0),
+  //                     ),
+  //                   ),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   void _showDetailsBottomSheet(
       BuildContext context, DonorUserModel donorUserModel) {
     showModalBottomSheet(
@@ -229,9 +349,65 @@ class AvailableDonor extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
+            // Doctor Prescription Section
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Doctor Prescription: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 80,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Handle fetching and displaying the image from Firebase Storage
+                      String imageUrl = donorUserModel.imageUrl ?? '';
+                      if (imageUrl.isNotEmpty) {
+                        // Display the image or navigate to a new screen to show the image
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ImageScreen(imageUrl: imageUrl)),
+                        );
+                      } else {
+                        // If imageUrl is empty, show a SnackBar indicating no image is available
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red,
+                            content: const Text(
+                                'No doctor prescription image available.'),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'View',
+                      style:
+                          TextStyle(color: Colors.white), // Text color is white
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red, // Button background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(7.0), // Button border radius
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -243,7 +419,7 @@ class AvailableDonor extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.phone,
-                      color: whiteColor,
+                      color: Colors.white,
                     ),
                     label: Text(
                       donorUserModel.contactno,
@@ -261,15 +437,19 @@ class AvailableDonor extends StatelessWidget {
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatScreen(
-                                  bloodBankUserModel: null,
-                                  donorUserModel: donorUserModel)));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatScreen(
+                            bloodBankUserModel: null,
+                            donorUserModel: donorUserModel,
+                            seekerUserModel: null,
+                          ),
+                        ),
+                      );
                     },
                     icon: const Icon(
                       Icons.message,
-                      color: whiteColor,
+                      color: Colors.white,
                     ),
                     label: const Text(
                       'Message',

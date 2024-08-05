@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/models/donor_user_model.dart';
 import 'package:blood_bank/home_page/home_page.dart';
@@ -9,7 +9,9 @@ import 'package:blood_bank/utils/utils.dart';
 import 'package:blood_bank/widgets/whiteroundbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DonorRegister extends StatefulWidget {
   const DonorRegister({
@@ -38,6 +40,8 @@ class _DonorRegisterState extends State<DonorRegister> {
   TextEditingController passwordController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
 
   List<String> cities = [
     "Lahore",
@@ -120,6 +124,30 @@ class _DonorRegisterState extends State<DonorRegister> {
       return 'Please enter a password';
     }
     return null;
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+    });
+  }
+
+  Future<String?> _uploadImage() async {
+    if (_image == null) return null;
+
+    try {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('donor-images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await ref.putFile(_image!);
+      final downloadUrl = await ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      log(e.toString());
+      utils().toastMessage('Image upload failed: $e');
+      return null;
+    }
   }
 
   @override
@@ -458,58 +486,89 @@ class _DonorRegisterState extends State<DonorRegister> {
                       const SizedBox(
                         height: 30,
                       ),
+                      const Text(
+                        'Upload Doctor Recommendation',
+                        style: TextStyle(color: whiteColor, fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () => _pickImage(ImageSource.gallery),
+                        child: const Text('Upload Image from Gallery'),
+                      ),
+                      Visibility(
+                        visible: _image != null,
+                        child: Container(
+                          height: 200,
+                          width: 200,
+                          child: _image == null
+                              ? const Text('No image selected.',
+                                  style: TextStyle(color: whiteColor))
+                              : Image.file(_image!),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
                       Padding(
                         padding: const EdgeInsets.only(left: 25, right: 25),
                         child: WhiteRoundButton(
                             title: 'Register',
                             loading: loading,
-                            onTap: () {
+                            onTap: () async {
                               if (_formKey.currentState?.validate() == true) {
+                                if (_image == null) {
+                                  utils()
+                                      .toastMessage('Please select an image');
+                                  return;
+                                }
                                 setState(() {
                                   loading = true;
                                 });
 
                                 try {
-                                  _auth
-                                      .createUserWithEmailAndPassword(
-                                          email:
-                                              emailController.text.toString(),
-                                          password: passwordController.text
-                                              .toString())
-                                      .then((value) {
-                                    final user = DonorUserModel(
-                                      fullname: fullnameController.text,
-                                      email: emailController.text,
-                                      age: int.parse(ageController.text),
-                                      city: selectedCity,
-                                      bloodgroup: selectedblood,
-                                      contactno: contactnoController.text,
-                                      password: passwordController.text,
-                                      id: value.user!.uid,
-                                    );
-                                    createUser(
-                                      user: user,
-                                      userId: value.user!.uid,
-                                    ).then((value) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const HomePage()));
-                                      setState(() {
-                                        loading = false;
-                                      });
-                                      utils().toastMessage(
-                                          'Register Successfully');
-                                    }).onError((error, stackTrace) {
-                                      utils().toastMessage(error.toString());
-                                      setState(() {
-                                        loading = false;
-                                      });
+                                  String? imageUrl = await _uploadImage();
+
+                                  if (imageUrl == null) {
+                                    setState(() {
+                                      loading = false;
                                     });
+                                    return;
+                                  }
+
+                                  UserCredential userCredential = await _auth
+                                      .createUserWithEmailAndPassword(
+                                          email: emailController.text,
+                                          password: passwordController.text);
+
+                                  final user = DonorUserModel(
+                                    fullname: fullnameController.text,
+                                    email: emailController.text,
+                                    age: int.parse(ageController.text),
+                                    city: selectedCity,
+                                    bloodgroup: selectedblood,
+                                    contactno: contactnoController.text,
+                                    password: passwordController.text,
+                                    id: userCredential.user!.uid,
+                                    imageUrl: imageUrl,
+                                  );
+
+                                  await createUser(
+                                    user: user,
+                                    userId: userCredential.user!.uid,
+                                  );
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePage()));
+                                  setState(() {
+                                    loading = false;
                                   });
+                                  utils().toastMessage('Register Successfully');
                                 } catch (e) {
-                                  log(e.toString());
+                                  utils().toastMessage(e.toString());
+                                  setState(() {
+                                    loading = false;
+                                  });
                                 }
                               }
                             }),
@@ -532,6 +591,7 @@ class _DonorRegisterState extends State<DonorRegister> {
       name: user.fullname,
       email: user.email,
       userType: "donor",
+      imageUrl: user.imageUrl,
     );
     FirebaseFirestore.instance
         .collection('users')

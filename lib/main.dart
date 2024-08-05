@@ -1,4 +1,5 @@
 import 'package:blood_bank/home_page/home_page.dart';
+import 'package:blood_bank/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ void main() async {
     appId: '1:375745278835:android:36d21eed3d04528d340b06',
     messagingSenderId: '375745278835',
     projectId: 'blood-bank-d9f7a',
-    storageBucket: 'profile-images.appspot.com',
+    storageBucket: 'gs://blood-bank-d9f7a.appspot.com',
   ));
   runApp(const MyApp());
 }
@@ -22,6 +23,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: HomePage());
+        debugShowCheckedModeBanner: false, home: SplashScreen());
   }
 }

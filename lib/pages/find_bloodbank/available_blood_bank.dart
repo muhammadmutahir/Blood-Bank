@@ -302,8 +302,10 @@ class AvailableBloodBank extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ChatScreen(
-                                  bloodBankUserModel: bloodBankUserModel,
-                                  donorUserModel: null)));
+                                    bloodBankUserModel: bloodBankUserModel,
+                                    donorUserModel: null,
+                                    seekerUserModel: null,
+                                  )));
                     },
                     icon: const Icon(
                       Icons.message,

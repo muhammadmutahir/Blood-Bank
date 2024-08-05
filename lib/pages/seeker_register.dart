@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/home_page.dart';
@@ -8,10 +9,12 @@ import 'package:blood_bank/utils/utils.dart';
 import 'package:blood_bank/widgets/whiteroundbutton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SeekerRegister extends StatefulWidget {
-  const SeekerRegister({super.key, Key});
+  const SeekerRegister({super.key});
 
   static const String id = 'SeekerRegister';
 
@@ -28,6 +31,8 @@ class _SeekerRegisterState extends State<SeekerRegister> {
   final TextEditingController passwordController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void dispose() {
@@ -63,6 +68,30 @@ class _SeekerRegisterState extends State<SeekerRegister> {
     return null;
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+    });
+  }
+
+  Future<String?> _uploadImage() async {
+    if (_image == null) return null;
+
+    try {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('seeker-images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await ref.putFile(_image!);
+      final downloadUrl = await ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      log(e.toString());
+      utils().toastMessage('Image upload failed: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,176 +122,195 @@ class _SeekerRegisterState extends State<SeekerRegister> {
               colors: [
                 Color.fromARGB(255, 255, 83, 83),
                 Color(0xff930A0A),
-                // Color(0xff46d733),
-                // Color(0xff5c9b54),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             )),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Image(
-                    height: 150,
-                    width: 150,
-                    image: AssetImage('assets/images/logo.png'),
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
-                          child: TextFormField(
-                            controller: fullnameController,
-                            keyboardType: TextInputType.text,
-                            style: const TextStyle(color: Color(0xffE5E3E3)),
-                            decoration: const InputDecoration(
-                                labelText: 'Full Name',
-                                labelStyle:
-                                    TextStyle(color: whiteColor, fontSize: 18),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                errorStyle: TextStyle(color: Colors.yellow),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow),
-                                )),
-                            validator: validateFullName,
-                          ),
+            child: Column(
+              children: [
+                const Image(
+                  height: 150,
+                  width: 150,
+                  image: AssetImage('assets/images/logo.png'),
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: TextFormField(
+                          controller: fullnameController,
+                          keyboardType: TextInputType.text,
+                          style: const TextStyle(color: Color(0xffE5E3E3)),
+                          decoration: const InputDecoration(
+                              labelText: 'Full Name',
+                              labelStyle:
+                                  TextStyle(color: whiteColor, fontSize: 18),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: whiteColor),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: whiteColor),
+                              ),
+                              errorStyle: TextStyle(color: Colors.yellow),
+                              errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.yellow),
+                              )),
+                          validator: validateFullName,
                         ),
-                        const SizedBox(
-                          height: 10,
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: const TextStyle(color: Color(0xffE5E3E3)),
+                          decoration: const InputDecoration(
+                              labelText: 'Email',
+                              labelStyle:
+                                  TextStyle(color: whiteColor, fontSize: 18),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: whiteColor),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: whiteColor),
+                              ),
+                              errorStyle: TextStyle(color: Colors.yellow),
+                              errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.yellow),
+                              )),
+                          validator: validateEmail,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
-                          child: TextFormField(
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            style: const TextStyle(color: Color(0xffE5E3E3)),
-                            decoration: const InputDecoration(
-                                labelText: 'Email',
-                                labelStyle:
-                                    TextStyle(color: whiteColor, fontSize: 18),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                errorStyle: TextStyle(color: Colors.yellow),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow),
-                                )),
-                            validator: validateEmail,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, right: 25),
-                          child: TextFormField(
-                            obscureText: obsecureText,
-                            controller: passwordController,
-                            keyboardType: TextInputType.text,
-                            style: const TextStyle(color: Color(0xffE5E3E3)),
-                            decoration: InputDecoration(
-                                labelText: 'Password',
-                                labelStyle: const TextStyle(
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: TextFormField(
+                          obscureText: obsecureText,
+                          controller: passwordController,
+                          keyboardType: TextInputType.text,
+                          style: const TextStyle(color: Color(0xffE5E3E3)),
+                          decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: const TextStyle(
+                                color: whiteColor,
+                                fontSize: 18,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    obsecureText = !obsecureText;
+                                  });
+                                },
+                                icon: Icon(
+                                  obsecureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                   color: whiteColor,
-                                  fontSize: 18,
                                 ),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      obsecureText = !obsecureText;
-                                    });
-                                  },
-                                  icon: Icon(
-                                    obsecureText
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: whiteColor,
-                                  ),
-                                ),
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: whiteColor),
-                                ),
-                                errorStyle:
-                                    const TextStyle(color: Colors.yellow),
-                                errorBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.yellow),
-                                )),
-                            validator: validatePassword,
-                          ),
+                              ),
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: whiteColor),
+                              ),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: whiteColor),
+                              ),
+                              errorStyle: const TextStyle(color: Colors.yellow),
+                              errorBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.yellow),
+                              )),
+                          validator: validatePassword,
                         ),
-                        const SizedBox(
-                          height: 30,
+                      ),
+                      const SizedBox(height: 30),
+                      const Text(
+                        'Upload Doctor Recommendation',
+                        style: TextStyle(color: whiteColor, fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () => _pickImage(ImageSource.gallery),
+                        child: const Text('Upload Image from Gallery'),
+                      ),
+                      Visibility(
+                        visible: _image != null,
+                        child: Container(
+                          height: 200,
+                          width: 200,
+                          child: _image == null
+                              ? const Text('No image selected.',
+                                  style: TextStyle(color: whiteColor))
+                              : Image.file(_image!),
                         ),
-                        Padding(
-                            padding: const EdgeInsets.only(left: 25, right: 25),
-                            child: WhiteRoundButton(
-                                title: 'Register',
-                                loading: loading,
-                                onTap: () async {
-                                  if (_formKey.currentState?.validate() ==
-                                      true) {
-                                    // yahan pr registration k lia jo logic lagani hy wo yahan pr type krni....
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    try {
-                                      _auth
-                                          .createUserWithEmailAndPassword(
-                                        email: emailController.text.toString(),
-                                        password:
-                                            passwordController.text.toString(),
-                                      )
-                                          .then((value) {
-                                        final user = SeekerUserModel(
-                                          fullname: fullnameController.text,
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                          id: value.user!.uid,
-                                        );
-                                        createUser(
-                                          user: user,
-                                          userId: value.user!.uid,
-                                        ).then((value) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const HomePage()));
-                                          setState(() {
-                                            loading = false;
-                                          });
-                                          utils().toastMessage(
-                                              'Register Successfully');
-                                        });
-                                      }).onError((error, stackTrace) {
-                                        utils().toastMessage(error.toString());
-                                        setState(() {
-                                          loading = false;
-                                        });
-                                      });
-                                    } catch (e) {
-                                      log(e.toString());
-                                    }
-                                  }
-                                })),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        child: WhiteRoundButton(
+                          title: 'Register',
+                          loading: loading,
+                          onTap: () async {
+                            if (_formKey.currentState?.validate() == true) {
+                              if (_image == null) {
+                                utils().toastMessage('Please select an image');
+                                return;
+                              }
+                              setState(() {
+                                loading = true;
+                              });
+                              try {
+                                String? imageUrl = await _uploadImage();
+
+                                if (imageUrl == null) {
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  return;
+                                }
+
+                                UserCredential userCredential =
+                                    await _auth.createUserWithEmailAndPassword(
+                                        email: emailController.text,
+                                        password: passwordController.text);
+
+                                final user = SeekerUserModel(
+                                  fullname: fullnameController.text,
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  id: userCredential.user!.uid,
+                                  imageUrl: imageUrl,
+                                );
+
+                                await createUser(
+                                  user: user,
+                                  userId: userCredential.user!.uid,
+                                );
+
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomePage()));
+                                setState(() {
+                                  loading = false;
+                                });
+                                utils().toastMessage('Register Successfully');
+                              } catch (e) {
+                                utils().toastMessage(e.toString());
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -279,13 +327,15 @@ class _SeekerRegisterState extends State<SeekerRegister> {
       name: user.fullname,
       email: user.email,
       userType: "seeker",
+      imageUrl: user.imageUrl,
     );
-    FirebaseFirestore.instance
+
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .set(userModel.toJson());
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('seekerdetails')
         .doc(userId)
         .set(user.toJson());

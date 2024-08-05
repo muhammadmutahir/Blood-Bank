@@ -1,6 +1,7 @@
 import 'package:blood_bank/components/constants.dart';
 import 'package:blood_bank/home_page/message.dart';
 import 'package:blood_bank/home_page/update_profile_seeker.dart';
+import 'package:blood_bank/home_page/user_profile_search.dart';
 import 'package:blood_bank/pages/donate_blood/donate_blood_req.dart';
 import 'package:blood_bank/pages/find_bloodbank/find_blood_bank_request.dart';
 import 'package:blood_bank/pages/find_donor/find_donor_request.dart';
@@ -163,6 +164,18 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const DonateBloodReq()));
+              },
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            button(
+              'Verify Donor/ Seeker',
+              () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserProfileSearch()));
               },
             ),
           ],
